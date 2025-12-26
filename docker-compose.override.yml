@@ -1,0 +1,5 @@
+services:
+  db:
+    volumes:
+      - ./docker/dev-data/db/dump.sql:/docker-entrypoint-initdb.d/dump.sql
+      

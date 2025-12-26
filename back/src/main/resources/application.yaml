@@ -1,0 +1,17 @@
+
+spring:
+  application:
+    name: mddapi
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${MYSQL_DB_URL:jdbc:mysql://127.0.0.1:3306/mddapp}
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+
+
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+

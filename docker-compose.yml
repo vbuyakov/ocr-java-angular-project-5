@@ -1,0 +1,29 @@
+version: '3'
+services:
+    db:
+        image: mysql:latest
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}   
+            MYSQL_DATABASE: ${MYSQL_DATABASE:-mddapp}
+            MYSQL_USER: ${MYSQL_USER:-mdduser}
+            MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mddpassword}
+        ports:
+            - "3306:3306"
+        volumes:
+            - db_data:/var/lib/mysql
+        networks:
+            - mddapp_network
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+            start_period: 30s
+volumes:
+    db_data:
+        driver: local
+networks:
+    mddapp_network:
+        driver: bridge
+        attachable: true
+    
