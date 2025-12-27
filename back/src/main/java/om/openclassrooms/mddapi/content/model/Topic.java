@@ -1,9 +1,14 @@
-package om.openclassrooms.mddapi.model;
+package om.openclassrooms.mddapi.content.model;
 
 import jakarta.persistence.*;
+import om.openclassrooms.mddapi.user.model.User;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "topics")
@@ -21,10 +26,10 @@ public class Topic {
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
-    private String createdAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private String updatedAt;
+    private LocalDateTime updatedAt;
 
     public long getId() {
         return id;
@@ -50,11 +55,22 @@ public class Topic {
         this.description = description;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public String getUpdatedAt() {
+    public LocalDateTime getUpdatedAt() {
         return updatedAt;
     }
+
+    public Set<User> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(Set<User> subscribers) {
+        this.subscribers = subscribers;
+    }
+
+    @ManyToMany(mappedBy = "subscribedTopics", fetch = FetchType.LAZY)
+    private Set<User> subscribers = new HashSet<>();
 }

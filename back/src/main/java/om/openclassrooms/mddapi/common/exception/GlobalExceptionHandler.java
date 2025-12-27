@@ -1,0 +1,66 @@
+package om.openclassrooms.mddapi.common.exception;
+
+import om.openclassrooms.mddapi.auth.exception.UserNotFoundException;
+import om.openclassrooms.mddapi.common.payload.MessageResponse;
+import om.openclassrooms.mddapi.common.utils.MessageResolver;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    private final MessageResolver messageResolver;
+
+    public GlobalExceptionHandler(MessageResolver messageResolver) {
+        this.messageResolver = messageResolver;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidation(MethodArgumentNotValidException ex) {
+        Map<String,String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .collect(
+                    java.util.stream.Collectors.toMap(fieldError ->
+                            fieldError.getField(),
+                            fieldError -> fieldError.getDefaultMessage(),
+                            (a,b) -> a
+                    )
+                );
+        return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<Map<String, List<String>>> handleConflict(ConflictException ex){
+        List<String> errors = ex.getMessageKeys()
+                .stream()
+                .map(key -> messageResolver.get(key))
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("errors", errors));
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<MessageResponse> handleUserNotFound(UserNotFoundException ex){
+        String message = messageResolver.get(ex.getMessage(),
+                new Object[]{ex.getLogin()});
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(message));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<MessageResponse> handleBadCredentials(BadCredentialsException ex){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(messageResolver.get("auth.login.badCredentials")));
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<MessageResponse> handleWrongRequest(Exception ex){
+        return ResponseEntity.badRequest().body(new MessageResponse("Wrong request"));
+    }
+}
