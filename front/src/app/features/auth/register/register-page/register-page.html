@@ -27,25 +27,31 @@
     </h1>
 
     <!-- Form -->
-    <form class="max-w-sm mx-auto flex flex-col gap-6">
+    <form class="max-w-sm mx-auto flex flex-col gap-7 mt-8">
 
-      <div>
-        <label class="block mb-1 text-sm">Nom d’utilisateur</label>
-        <input type="text" class="input" />
-      </div>
+      <app-form-input 
+        label="Nom d'utilisateur"
+        type="text"
+        placeholder="Entrez votre nom d'utilisateur"
+        [required]="true">
+      </app-form-input>
 
-      <div>
-        <label class="block mb-1 text-sm">Adresse e-mail</label>
-        <input type="email" class="input" />
-      </div>
+      <app-form-input 
+        label="Adresse e-mail"
+        type="email"
+        placeholder="votre@email.com"
+        [required]="true">
+      </app-form-input>
 
-      <div>
-        <label class="block mb-1 text-sm">Mot de passe</label>
-        <input type="password" class="input" />
-      </div>
+      <app-form-input 
+        label="Mot de passe"
+        type="password"
+        placeholder="Entrez votre mot de passe"
+        [required]="true">
+      </app-form-input>
 
-      <button type="submit" class="btn-primary mx-auto mt-4">
-        S’inscrire
+      <button type="submit" class="btn-primary mx-auto mt-2">
+        S'inscrire
       </button>
 
     </form>
