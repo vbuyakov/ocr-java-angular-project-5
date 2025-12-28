@@ -1,1 +1,54 @@
-<p>register-page works!</p>
+<section class="bg-white min-h-screen">
+  <div class="container-auth pt-10 md:pt-10">
+
+    <!-- Back arrow (mobile + desktop) -->
+    <div class="mb-6">
+      <a routerLink="/" class="inline-block">
+        <img
+          src="/images/common/left-arrow.svg"
+          alt="Back"
+          class="w-[39px]"
+        />
+      </a>
+    </div>
+
+    <!-- Mobile logo only -->
+    <div class="md:hidden mb-6">
+      <img
+        src="/images/illustrations/welcome-auth-mobile.png"
+        alt="MDD"
+        class="mx-auto"
+      />
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-[24px] text-center mb-8">
+      Inscription
+    </h1>
+
+    <!-- Form -->
+    <form class="max-w-sm mx-auto flex flex-col gap-6">
+
+      <div>
+        <label class="block mb-1 text-sm">Nom d’utilisateur</label>
+        <input type="text" class="input" />
+      </div>
+
+      <div>
+        <label class="block mb-1 text-sm">Adresse e-mail</label>
+        <input type="email" class="input" />
+      </div>
+
+      <div>
+        <label class="block mb-1 text-sm">Mot de passe</label>
+        <input type="password" class="input" />
+      </div>
+
+      <button type="submit" class="btn-primary mx-auto mt-4">
+        S’inscrire
+      </button>
+
+    </form>
+
+  </div>
+</section>

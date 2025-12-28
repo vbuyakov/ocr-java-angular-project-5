@@ -4,6 +4,7 @@ import { Routes } from '@angular/router';
 import {AppLayout} from './core/layouts/app-layout/app-layout';
 import {AuthLayout} from './core/layouts/auth-layout/auth-layout';
 import {BlankLayout} from './core/layouts/blank-layout/blank-layout';
+import {authGuard} from './core/auth/auth-guard';
 
 export const routes: Routes = [
   {
@@ -33,6 +34,7 @@ export const routes: Routes = [
   {
     path: '',
     component: AppLayout,
+    canActivate: [authGuard],
     children: [
       {
         path: 'articles',

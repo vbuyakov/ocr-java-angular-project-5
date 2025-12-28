@@ -73,6 +73,19 @@
   --color-mdd-text-secondary: #737373;
   --color-mdd-danger: #dc2626;
 }
+/* MDD Containers */
+/* App layout containers */
+.container-page {
+  @apply mx-auto w-full max-w-screen-xl px-4;
+}
+
+.container-auth {
+  @apply mx-auto w-full max-w-screen-md px-4;
+}
+
+.container-narrow {
+  @apply mx-auto w-full max-w-screen-sm px-4;
+}
 
 /* MDD Utility Classes */
 .btn-primary {
@@ -110,3 +123,21 @@
 .bg-mdd-surface {
   @apply bg-secondary-100;
 }
+
+.btn-outline {
+  @apply
+  bg-white
+  border
+  border-secondary-400
+  text-secondary-900
+  font-medium
+  py-2
+  px-6
+  rounded-md
+  transition-colors
+  duration-200
+  hover:bg-secondary-100
+  hover:border-secondary-500
+  w-[156px];
+}
+
