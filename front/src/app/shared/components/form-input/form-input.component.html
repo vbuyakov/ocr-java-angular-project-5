@@ -1,0 +1,30 @@
+<div class="form-input-wrapper">
+  @if (label()) {
+    <label 
+      [for]="inputId" 
+      class="form-input-label"
+    >
+      {{ label() }}
+    </label>
+  }
+  
+  <input
+    [id]="inputId"
+    [type]="type()"
+    [placeholder]="placeholder()"
+    [required]="required()"
+    [disabled]="isDisabled"
+    [value]="value"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    [class.form-input-error]="hasError"
+    class="form-input"
+  />
+  
+  @if (hasError) {
+    <span class="form-input-error-message" role="alert">
+      {{ errorMessage() }}
+    </span>
+  }
+</div>
+

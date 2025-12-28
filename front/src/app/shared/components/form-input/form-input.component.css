@@ -1,0 +1,64 @@
+.form-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-input-label {
+  color: var(--color-secondary-800);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--color-mdd-text); /* Black border by default */
+  border-radius: 0.5rem;
+  height: 3rem; /* 48px */
+  font-size: 1rem;
+  transition: all 0.2s;
+  background-color: white;
+}
+
+.form-input:hover:not(:disabled):not(.form-input-error) {
+  border-color: var(--color-primary-400);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-primary-600);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary-600) 20%, transparent);
+}
+
+.form-input:disabled {
+  background-color: var(--color-secondary-100);
+  cursor: not-allowed;
+  opacity: 0.6;
+  border-color: var(--color-secondary-300);
+}
+
+.form-input::placeholder {
+  color: var(--color-secondary-400);
+}
+
+/* Error state */
+.form-input-error {
+  border-color: var(--color-danger-600);
+}
+
+.form-input-error:hover {
+  border-color: var(--color-danger-600);
+}
+
+.form-input-error:focus {
+  border-color: var(--color-danger-600);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-danger-600) 20%, transparent);
+}
+
+.form-input-error-message {
+  color: var(--color-danger-600);
+  font-size: 0.875rem;
+  margin-top: -0.25rem;
+}
+
