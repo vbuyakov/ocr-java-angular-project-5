@@ -12,6 +12,7 @@ public record RegistrationRequest (
     @Email
     String email,
 
+    @NotBlank
     @ValidPassword
     String password
 ) {}

@@ -31,6 +31,13 @@ public class Topic {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @ManyToMany(mappedBy = "subscribedTopics", fetch = FetchType.LAZY)
+    private Set<User> subscribers = new HashSet<>();
+
+    @OneToMany(mappedBy = "topic", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Article> articles = new HashSet<>();
+
+
     public long getId() {
         return id;
     }
@@ -70,7 +77,4 @@ public class Topic {
     public void setSubscribers(Set<User> subscribers) {
         this.subscribers = subscribers;
     }
-
-    @ManyToMany(mappedBy = "subscribedTopics", fetch = FetchType.LAZY)
-    private Set<User> subscribers = new HashSet<>();
 }

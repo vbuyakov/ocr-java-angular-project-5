@@ -25,5 +25,4 @@ public interface TopicRepository extends JpaRepository<Topic, Long> {
         ORDER BY t.updatedAt DESC 
         """)
     List<TopicResponse> findAllWithSubscriptionFlag(@Param("userId") Long userId);
-
 }

@@ -2,6 +2,8 @@ package om.openclassrooms.mddapi.user.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import om.openclassrooms.mddapi.content.model.Article;
+import om.openclassrooms.mddapi.content.model.Comment;
 import om.openclassrooms.mddapi.content.model.Topic;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -45,29 +47,14 @@ public class User implements UserDetails {
     )
     private Set<Topic> subscribedTopics = new java.util.HashSet<>();
 
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Article> articles = new java.util.HashSet<>();
+
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Comment> comments = new java.util.HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

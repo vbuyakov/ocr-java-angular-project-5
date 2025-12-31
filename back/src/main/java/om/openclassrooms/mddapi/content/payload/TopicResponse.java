@@ -12,11 +12,9 @@ public record TopicResponse (
 
     Boolean isUserSubscribed,
 
-    @JsonProperty("created_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     LocalDateTime createdAt,
 
-    @JsonProperty("updated_at")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy/MM/dd")
     LocalDateTime updatedAt
 ){ }

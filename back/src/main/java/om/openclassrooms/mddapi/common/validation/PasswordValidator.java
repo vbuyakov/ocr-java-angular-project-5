@@ -11,6 +11,7 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword,Stri
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (value == null || value.length() == 0) return true; //Don't validate empty values
         return value != null
                 && value.length() >= 8
                 && PASSWORD_PATTERN.matcher(value).matches();
