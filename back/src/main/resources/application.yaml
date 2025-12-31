@@ -1,17 +1,33 @@
+server:
+  port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: ${API_PATH:/api}
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
 
 spring:
   application:
-    name: mddapi
+    name: ${APP_NAME}
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${MYSQL_DB_URL:jdbc:mysql://127.0.0.1:3306/mddapp}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
+  jpa:
+    show-sql: true
+    open-in-view: false
 
+    hibernate:
+      ddl-auto: update
 
+  messages:
+    basename: messages
+    encoding: UTF-8
+    default-encoding: UTF-8
 
-server:
-  port: 8080
-  servlet:
-    context-path: /api
-
+  security:
+    jwt:
+      secret-key: ${JWT_SECRET_KEY}
+      expiration-time: ${JWT_EXPIRATION_TIME:3600000}

@@ -1,0 +1,53 @@
+<section class="bg-white min-h-screen">
+  <div class="container-auth pt-10 md:pt-10">
+
+    <!-- Back arrow (mobile + desktop) -->
+    <div class="mb-6">
+      <a routerLink="/" class="inline-block">
+        <img
+          src="/images/common/left-arrow.svg"
+          alt="Back"
+          class="w-[39px]"
+        />
+      </a>
+    </div>
+
+    <!-- Mobile logo only -->
+    <div class="md:hidden mb-6">
+      <img
+        src="/images/illustrations/welcome-auth-mobile.png"
+        alt="MDD"
+        class="mx-auto"
+      />
+    </div>
+
+    <!-- Title -->
+    <h1 class="text-[24px] text-center mb-8">
+      Se connecter
+    </h1>
+
+    <!-- Form -->
+    <form class="max-w-sm mx-auto flex flex-col gap-7 mt-8">
+
+      <app-form-input 
+        label="E-mail ou nom d'utilisateur"
+        type="text"
+        placeholder="Entrez votre e-mail ou nom d'utilisateur"
+        [required]="true">
+      </app-form-input>
+
+      <app-form-input 
+        label="Mot de passe"
+        type="password"
+        placeholder="Entrez votre mot de passe"
+        [required]="true">
+      </app-form-input>
+
+      <button type="submit" class="btn-primary mx-auto mt-2">
+        Se connecter
+      </button>
+
+    </form>
+
+  </div>
+</section>
