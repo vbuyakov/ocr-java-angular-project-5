@@ -22,6 +22,9 @@ export class FormInputComponent implements ControlValueAccessor {
   required = input<boolean>(false);
   disabled = input<boolean>(false);
   errorMessage = input<string | undefined>(undefined);
+  
+  // Support for form control disabled state
+  formControlDisabled = input<boolean>(false);
 
   // Generate unique ID for label-input association
   inputId = `form-input-${Math.random().toString(36).substring(2, 9)}`;
@@ -52,7 +55,7 @@ export class FormInputComponent implements ControlValueAccessor {
   }
 
   get isDisabled(): boolean {
-    return this.disabled() || this._disabled;
+    return this.disabled() || this._disabled || this.formControlDisabled();
   }
 
   onInput(event: Event): void {

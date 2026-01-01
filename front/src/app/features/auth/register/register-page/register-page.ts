@@ -4,8 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
 import { AuthApiService } from '@features/auth/auth-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { timer } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { ToastService } from '@shared/services/toast.service';
+import { passwordValidator, getPasswordErrorMessage } from '@shared/validators/password.validator';
 
 @Component({
   selector: 'app-register-page',
@@ -17,10 +17,10 @@ export class RegisterPage {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authApiService = inject(AuthApiService);
   private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
 
   registerForm: FormGroup;
   isSubmitting = signal(false);
-  successMessage = signal<string | null>(null);
   fieldErrors = signal<Record<string, string>>({});
   generalErrors = signal<string[]>([]);
 
@@ -28,8 +28,20 @@ export class RegisterPage {
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      password: ['', [Validators.required, passwordValidator()]],
     });
+  }
+
+  get usernameControl() {
+    return this.registerForm.get('username');
+  }
+
+  get emailControl() {
+    return this.registerForm.get('email');
+  }
+
+  get passwordControl() {
+    return this.registerForm.get('password');
   }
 
   onSubmit(): void {
@@ -40,7 +52,6 @@ export class RegisterPage {
     this.isSubmitting.set(true);
     this.fieldErrors.set({});
     this.generalErrors.set([]);
-    this.successMessage.set(null);
 
     const formValue = this.registerForm.value;
 
@@ -48,16 +59,12 @@ export class RegisterPage {
       username: formValue.username.trim(),
       email: formValue.email.trim(),
       password: formValue.password,
-    }).pipe(
-      tap(() => {
+    }).subscribe({
+      next: () => {
         this.isSubmitting.set(false);
-        this.successMessage.set('Inscription réussie ! Redirection...');
-      }),
-      switchMap(() => timer(1000)),
-      tap(() => {
+        this.toastService.show('Inscription réussie !', 'success', 3000);
         this.router.navigate(['/auth/login']);
-      })
-    ).subscribe({
+      },
       error: (error: HttpErrorResponse) => {
         this.isSubmitting.set(false);
         this.handleError(error);
@@ -98,5 +105,7 @@ export class RegisterPage {
   getGeneralErrors(): string[] {
     return this.generalErrors();
   }
+
+  getPasswordErrorMessage = getPasswordErrorMessage;
 }
 

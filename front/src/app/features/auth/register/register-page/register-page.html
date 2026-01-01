@@ -1,5 +1,5 @@
 <section class="bg-white min-h-screen">
-  <div class="container-auth pt-10 md:pt-10">
+  <div class="container-auth pt-10">
 
     <!-- Back arrow (mobile + desktop) -->
     <div class="mb-6">
@@ -32,12 +32,6 @@
       (ngSubmit)="onSubmit()"
       class="max-w-sm mx-auto flex flex-col gap-7 mt-8"
     >
-      @if (successMessage()) {
-        <div class="bg-success-50 border border-success-200 text-success-800 px-4 py-3 rounded-lg text-sm">
-          {{ successMessage() }}
-        </div>
-      }
-
       @if (getGeneralErrors().length > 0) {
         <div class="bg-danger-50 border border-danger-200 text-danger-800 px-4 py-3 rounded-lg text-sm">
           @for (error of getGeneralErrors(); track error) {
@@ -51,7 +45,8 @@
         label="Nom d'utilisateur"
         type="text"
         placeholder="Entrez votre nom d'utilisateur"
-        [errorMessage]="getFieldError('username')"
+        [errorMessage]="getFieldError('username') || (usernameControl?.touched && usernameControl?.invalid ? 'Ce champ est requis' : undefined)"
+        [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
 
@@ -60,7 +55,8 @@
         label="Adresse e-mail"
         type="email"
         placeholder="votre@email.com"
-        [errorMessage]="getFieldError('email')"
+        [errorMessage]="getFieldError('email') || (emailControl?.touched && emailControl?.invalid ? (emailControl?.errors?.['email'] ? 'Email invalide' : 'Ce champ est requis') : undefined)"
+        [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
 
@@ -69,7 +65,8 @@
         label="Mot de passe"
         type="password"
         placeholder="Entrez votre mot de passe"
-        [errorMessage]="getFieldError('password')"
+        [errorMessage]="getFieldError('password') || (passwordControl?.touched && passwordControl?.invalid ? (getPasswordErrorMessage(passwordControl?.errors || null) || 'Ce champ est requis') : undefined)"
+        [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
 
