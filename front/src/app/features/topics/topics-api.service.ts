@@ -7,22 +7,22 @@ import {TopicResponseDto} from '@features/topics/dtos/topic-response.dto';
   providedIn: 'root',
 })
 export class TopicsApiService {
-  private readonly apiService = inject(ApiService)
+  private readonly apiService = inject(ApiService);
 
   getAll(): Observable<TopicResponseDto[]> {
-    return this.apiService.get('/topics')
+    return this.apiService.get('/topics');
   }
 
   getTopicsForUser(): Observable<TopicResponseDto[]> {
-    return this.apiService.get('/topics/subscribed')
+    return this.apiService.get('/topics/subscribed');
   }
 
   subscribeToTopic(topicId: number): Observable<any> {
-    return this.apiService.post(`/topics/${topicId}/subscribe`, {})
+    return this.apiService.post(`/topics/${topicId}/subscribe`, {});
   }
 
   unsubscribeFromTopic(topicId: number): Observable<any> {
-    return this.apiService.delete(`/topics/${topicId}/subscribe`)
+    return this.apiService.delete(`/topics/${topicId}/subscribe`);
   }
 
 }

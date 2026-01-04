@@ -8,9 +8,9 @@ import {UserProfileRequestDto} from '@features/profile/dtos/user-profile-request
   providedIn: 'root',
 })
 export class UserProfileApiService {
-    private readonly apiService = inject(ApiService)
+    private readonly apiService = inject(ApiService);
     getProfile(): Observable<UserProfileResponseDto> {
-        return this.apiService.get('/user/profile')
+        return this.apiService.get('/user/profile');
     }
 
   updateProfile(userProfile: UserProfileRequestDto):Observable<UserProfileResponseDto> {

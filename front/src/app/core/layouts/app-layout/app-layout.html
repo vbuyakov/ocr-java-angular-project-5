@@ -64,7 +64,7 @@ border-secondary-200 border-b-1 border-b-solid">
           routerLink="/profile"
           routerLinkActive="active"
         >
-          <user-default-avatar
+          <app-user-default-avatar
             [class]="isProfileActive() ? 'stroke-accent-600 opacity-100' : 'stroke-secondary-700 opacity-50' "
             class="size-12 "/>
         </a>
@@ -131,7 +131,7 @@ border-secondary-200 border-b-1 border-b-solid">
           (click)="closeMobileMenu()"
           class="flex size-12 hover:opacity-80 no-underline"
         >
-          <user-default-avatar
+          <app-user-default-avatar
             [class]="isProfileActive() ? 'stroke-accent-600 opacity-100' : 'stroke-secondary-700 opacity-50' "
             class="size-12 "/>
         </a>

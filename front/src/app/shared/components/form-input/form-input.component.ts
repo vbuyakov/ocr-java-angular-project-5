@@ -31,8 +31,8 @@ export class FormInputComponent implements ControlValueAccessor {
   // Generate unique ID for label-input association
   inputId = `form-input-${Math.random().toString(36).substring(2, 9)}`;
 
-  value: string = '';
-  private _disabled: boolean = false;
+  value = '';
+  private _disabled = false;
   private onChange = (value: string) => {};
   private onTouched = () => {};
 

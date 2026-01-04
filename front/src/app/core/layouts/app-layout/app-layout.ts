@@ -2,16 +2,11 @@ import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular
 import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
 import { AuthService } from '@core/auth/auth.service';
 import { filter, Subscription } from 'rxjs';
-import {UserDefaultAvatar} from '@shared/components/icon/user-default-avatar';
+import { AppUserDefaultAvatar } from '@shared/components/icon/app-user-default-avatar.component';
 
 @Component({
   selector: 'app-app-layout',
-  imports: [
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    UserDefaultAvatar
-  ],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, AppUserDefaultAvatar],
   templateUrl: './app-layout.html',
   styleUrl: './app-layout.scss',
 })
@@ -28,12 +23,12 @@ export class AppLayout implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentRoute.set(this.router.url);
 
-    this.routerSubscription = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
-    ).subscribe((event: any) => {
-      this.currentRoute.set(event.url);
-      this.isMobileMenuOpen.set(false);
-    });
+    this.routerSubscription = this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe((event: any) => {
+        this.currentRoute.set(event.url);
+        this.isMobileMenuOpen.set(false);
+      });
   }
 
   ngOnDestroy(): void {
@@ -41,7 +36,7 @@ export class AppLayout implements OnInit, OnDestroy {
   }
 
   toggleMobileMenu(): void {
-    this.isMobileMenuOpen.update(open => !open);
+    this.isMobileMenuOpen.update((open) => !open);
   }
 
   closeMobileMenu(): void {

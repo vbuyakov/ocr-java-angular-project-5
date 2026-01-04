@@ -18,31 +18,31 @@ const DEFAULT_ORDER_BY: OrderByKey = 'createdAt';
 })
 export class ArticlesPage {
 
-  readonly OrderBy = OrderBy
-  readonly OrderByKeys = Object.keys(OrderBy) as OrderByKey[]
-  orderByValue = signal<string>(DEFAULT_ORDER_BY)
-  orderToValue = signal<string>('asc')
+  readonly OrderBy = OrderBy;
+  readonly OrderByKeys = Object.keys(OrderBy) as OrderByKey[];
+  orderByValue = signal<string>(DEFAULT_ORDER_BY);
+  orderToValue = signal<string>('asc');
 
-  isLoading = signal(false)
-  articles$!: Observable<ArticleResponseDto[]>
+  isLoading = signal(false);
+  articles$!: Observable<ArticleResponseDto[]>;
 
-  private articlesApiService = inject(ArticlesApiService)
-  private router = inject(Router)
+  private articlesApiService = inject(ArticlesApiService);
+  private router = inject(Router);
 
   constructor() {
     effect(()=>{
       this.articles$ = this.articlesApiService.getAll(this.orderByValue(), this.orderToValue()).pipe(
         tap(() => {
-          console.log('articles loaded For')
-          console.log('orderTo is ', this.orderToValue())
-          console.log('orderBy is ', this.orderByValue())
+          console.log('articles loaded For');
+          console.log('orderTo is ', this.orderToValue());
+          console.log('orderBy is ', this.orderByValue());
         })
-      )
-    })
+      );
+    });
   }
 
   orderToChanged() {
-    this.orderToValue.update(value => value === 'asc' ? 'desc' : 'asc')
+    this.orderToValue.update(value => value === 'asc' ? 'desc' : 'asc');
   }
 
   showArticle(articleId: number):void {

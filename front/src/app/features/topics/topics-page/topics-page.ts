@@ -10,24 +10,24 @@ import {TopicResponseDto} from '@features/topics/dtos/topic-response.dto';
 })
 export class TopicsPage implements OnInit{
 
-  private topicsApiService = inject(TopicsApiService)
+  private topicsApiService = inject(TopicsApiService);
 
-  topicsList = signal<TopicResponseDto[]>([])
+  topicsList = signal<TopicResponseDto[]>([]);
 
   ngOnInit() {
-    this.loadTopic()
+    this.loadTopic();
   }
 
   loadTopic() {
     this.topicsApiService.getAll().subscribe((topics: TopicResponseDto[])=> {
       this.topicsList.set(topics);
-    })
+    });
   }
 
   subscribeToTopic(topicId:number) {
     this.topicsApiService.subscribeToTopic(topicId).subscribe(
       () => this.loadTopic()
-    )
+    );
   }
 
 }

@@ -23,7 +23,7 @@
         formControlName="username"
         type="text"
         placeholder="Username"
-        [errorMessage]="getFieldError('username') || (usernameControl?.touched && usernameControl?.invalid ? 'Ce champ est requis' : undefined)"
+        [errorMessage]="getFieldError('username')"
         [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
@@ -32,7 +32,7 @@
         formControlName="email"
         type="email"
         placeholder="email@email.fr"
-        [errorMessage]="getFieldError('email') || (emailControl?.touched && emailControl?.invalid ? (emailControl?.errors?.['email'] ? 'Email invalide' : 'Ce champ est requis') : undefined)"
+        [errorMessage]="getFieldError('email')"
         [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
@@ -41,10 +41,7 @@
         formControlName="password"
         type="password"
         placeholder="Mot de passe"
-        [errorMessage]="getFieldError('password')
-        || (passwordControl?.touched && passwordControl?.invalid
-        ? (getPasswordErrorMessage(passwordControl?.errors || null)
-        || 'Ce champ est requis') : undefined)"
+        [errorMessage]="getFieldError('password')"
         [formControlDisabled]="isSubmitting()"
       >
       </app-form-input>

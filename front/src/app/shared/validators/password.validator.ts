@@ -30,7 +30,7 @@ export function passwordValidator(): ValidatorFn {
     }
 
     // Check for at least one special character
-    if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value)) {
+    if (!/[!@#$%^&*()_+\-=][{};':"\\|,.<>/?]/.test(value)) {
       errors['hasSpecialChar'] = true;
     }
 
@@ -63,4 +63,3 @@ export function getPasswordErrorMessage(errors: ValidationErrors | null): string
 
   return 'Le mot de passe ne respecte pas les critères requis';
 }
-
