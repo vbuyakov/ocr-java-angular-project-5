@@ -4,7 +4,7 @@ import { ApiService } from '@core/api/api.service';
 import { MessageResponse } from '@core/api/api-types';
 import { RegistrationRequest } from './dtos/registration-request.dto';
 import { LoginRequest } from './dtos/login-request.dto';
-import { LoginResponse } from './dtos/login-response.dto';
+import { LoginResponseDto } from './dtos/login-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -16,8 +16,8 @@ export class AuthApiService {
     return this.apiService.post<MessageResponse>('/auth/register', request);
   }
 
-  login(request: LoginRequest): Observable<LoginResponse> {
-    return this.apiService.post<LoginResponse>('/auth/login', request);
+  login(request: LoginRequest): Observable<LoginResponseDto> {
+    return this.apiService.post<LoginResponseDto>('/auth/login', request);
   }
 }
 

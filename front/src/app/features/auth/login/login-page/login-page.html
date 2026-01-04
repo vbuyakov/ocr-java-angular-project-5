@@ -5,7 +5,7 @@
     <div class="mb-6">
       <a routerLink="/" class="inline-block">
         <img
-          src="/images/common/left-arrow.svg"
+          src="/images/common/arrow-left.svg"
           alt="Back"
           class="w-[39px]"
         />
@@ -27,8 +27,8 @@
     </h1>
 
     <!-- Form -->
-    <form 
-      [formGroup]="loginForm" 
+    <form
+      [formGroup]="loginForm"
       (ngSubmit)="onSubmit()"
       class="max-w-sm mx-auto flex flex-col gap-7 mt-8"
     >
@@ -40,7 +40,7 @@
         </div>
       }
 
-      <app-form-input 
+      <app-form-input
         formControlName="login"
         label="E-mail ou nom d'utilisateur"
         type="text"
@@ -50,18 +50,18 @@
         [required]="true">
       </app-form-input>
 
-      <app-form-input 
+      <app-form-input
         formControlName="password"
         label="Mot de passe"
         type="password"
         placeholder="Entrez votre mot de passe"
-        [errorMessage]="passwordControl?.touched && passwordControl?.invalid ? (getPasswordErrorMessage(passwordControl?.errors || null) || 'Ce champ est requis') : undefined"
+        [errorMessage]="passwordControl?.touched && passwordControl?.invalid ? 'Ce champ est requis' : undefined"
         [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         class="btn-primary mx-auto mt-2"
         [disabled]="isSubmitting() || loginForm.invalid"
       >

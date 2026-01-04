@@ -20,7 +20,7 @@
   --color-secondary-100: #f5f5f5;
   --color-secondary-200: #e5e5e5;
   --color-secondary-300: #d4d4d4;
-  --color-secondary-400: #a3a3a3;
+  --color-secondary-400: #939393;
   --color-secondary-500: #737373;
   --color-secondary-600: #525252;
   --color-secondary-700: #404040;
@@ -89,7 +89,11 @@
 
 /* MDD Utility Classes */
 .btn-primary {
-  @apply bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200;
+  @apply bg-primary-600 hover:bg-primary-700 disabled:bg-secondary-400
+  text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200
+  cursor-pointer
+  ;
+
 }
 
 .btn-secondary {
@@ -141,3 +145,10 @@
   w-[156px];
 }
 
+
+.ellipsis-5-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

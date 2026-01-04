@@ -1,7 +1,146 @@
-<header>
-  <!-- header will be here -->
+<header class="backgroud-white flex w-full
+border-secondary-200 border-b-1 border-b-solid">
+  <div class="flex items-center justify-between w-full px-4 md:px-9">
+    <!-- Logo -->
+    <a class="flex items-center" routerLink="/">
+      <img
+        alt="MDD"
+        class="hidden md:block"
+        src="/images/brand/logo.png"
+      />
+      <img
+        alt="MDD"
+        class="block md:hidden"
+        src="/images/brand/logo-mobile.png"
+      />
+    </a>
+
+    <div class="flex items-right">
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex pr-9 gap-6 items-center">
+        <button
+          (click)="logout()"
+          class="text-danger-700 hover:text-danger-900 cursor-pointer text-sm font-bold"
+          type="button"
+        >
+          Se déconnecter
+        </button>
+        <a
+          class="mdd-text text-xl no-underline font-normal transition-colors duration-200  cursor-pointer
+          hover:text-primary-600"
+          routerLink="/articles"
+          routerLinkActive="text-primary-600"
+        >
+          Articles
+        </a>
+        <a
+          routerLink="/topics"
+          routerLinkActive="text-primary-600"
+          class="mdd-text text-xl no-underline font-normal transition-colors duration-200  cursor-pointer
+          hover:text-primary-600"
+        >
+          Thèmes
+        </a>
+      </nav>
+
+      <div>
+        <!-- Mobile Menu Button -->
+        <button
+          (click)="toggleMobileMenu()"
+          aria-label="Toggle menu"
+          class="flex items-center cursor-pointer p-2 text-primary-600 md:hidden"
+          type="button"
+        >
+          <svg fill="none" height="16" viewBox="0 0 24 16" width="24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0H24V2H0V0ZM0 7H24V9H0V7ZM0 14H24V16H0V14Z" fill="currentColor"/>
+          </svg>
+        </button>
+
+        <!-- User Avatar (Desktop) -->
+        <a
+          [class.active]="isProfileActive()"
+          aria-label="Profile"
+          class="hidden md:flex size-12 hover:opacity-80 no-underline"
+          routerLink="/profile"
+          routerLinkActive="active"
+        >
+          <user-default-avatar
+            [class]="isProfileActive() ? 'stroke-accent-600 opacity-100' : 'stroke-secondary-700 opacity-50' "
+            class="size-12 "/>
+        </a>
+      </div>
+    </div>
+  </div>
 </header>
 
-<main class="app-layout">
+<!-- Mobile Sidebar -->
+@if (isMobileMenuOpen()) {
+  <div class="
+  fixed
+  top-0
+  left-0
+  right-0
+  bottom-0
+  z-998
+  bg-black/50
+  " (click)="closeMobileMenu()"></div>
+  <aside class="
+  fixed
+  top-0
+  right-0
+  h-full
+  z-999
+  p-0
+  w-[280px]
+  overflow-y-auto
+  bg-white
+  ">
+    <div class="flex flex-col justify-between h-full pt-12 pb-1 pr-4">
+      <nav class="flex flex-col gap-4 items-end">
+        <button
+          type="button"
+          (click)="logout()"
+          class="text-danger-700 hover:text-danger-900 cursor-pointer text-sm font-bold"
+        >
+          Se déconnecter
+        </button>
+        <a
+          routerLink="/articles"
+          (click)="closeMobileMenu()"
+          routerLinkActive="text-primary-600"
+          class="mdd-text text-xl no-underline font-normal transition-colors duration-200  cursor-pointer
+          hover:text-primary-600"
+        >
+          Articles
+        </a>
+        <a
+          routerLink="/topics"
+          (click)="closeMobileMenu()"
+          routerLinkActive="text-primary-600"
+          class="mdd-text text-xl no-underline font-normal transition-colors duration-200  cursor-pointer
+          hover:text-primary-600"
+        >
+          Thèmes
+        </a>
+      </nav>
+
+      <div class="flex w-full justify-end">
+        <a
+          routerLink="/profile"
+          routerLinkActive="active"
+          (click)="closeMobileMenu()"
+          class="flex size-12 hover:opacity-80 no-underline"
+        >
+          <user-default-avatar
+            [class]="isProfileActive() ? 'stroke-accent-600 opacity-100' : 'stroke-secondary-700 opacity-50' "
+            class="size-12 "/>
+        </a>
+      </div>
+
+    </div>
+  </aside>
+}
+
+<main class="bg-white h-[calc(100vh-94px)]">
   <router-outlet/>
 </main>

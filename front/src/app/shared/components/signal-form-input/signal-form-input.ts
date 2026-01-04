@@ -1,24 +1,16 @@
-import {Component, forwardRef, input} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, input, model } from '@angular/core';
+import { FormValueControl } from '@angular/forms/signals';
 import {NgClass} from '@angular/common';
 
 @Component({
-  selector: 'app-form-input',
-  standalone: true,
+  selector: 'app-signal-form-input',
   imports: [
     NgClass
   ],
-  templateUrl: './form-input.component.html',
-  styleUrl: './form-input.component.css',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => FormInputComponent),
-      multi: true
-    }
-  ]
+  templateUrl: './signal-form-input.html',
+  styleUrl: './signal-form-input.css',
 })
-export class FormInputComponent implements ControlValueAccessor {
+export class SignalFormInput implements FormValueControl<string> {
   label = input<string>('');
   type = input<'text' | 'email' | 'password'>('text');
   placeholder = input<string>('');
@@ -31,7 +23,9 @@ export class FormInputComponent implements ControlValueAccessor {
   // Generate unique ID for label-input association
   inputId = `form-input-${Math.random().toString(36).substring(2, 9)}`;
 
-  value: string = '';
+  value= model('')
+
+
   private _disabled: boolean = false;
   private onChange = (value: string) => {};
   private onTouched = () => {};
@@ -40,9 +34,6 @@ export class FormInputComponent implements ControlValueAccessor {
     return !!this.errorMessage();
   }
 
-  writeValue(value: string): void {
-    this.value = value || '';
-  }
 
   registerOnChange(fn: (value: string) => void): void {
     this.onChange = fn;
@@ -62,8 +53,8 @@ export class FormInputComponent implements ControlValueAccessor {
 
   onInput(event: Event): void {
     const target = event.target as HTMLInputElement;
-    this.value = target.value;
-    this.onChange(this.value);
+    this.value.set(target.value);
+    this.onChange(this.value());
   }
 
   onBlur(): void {

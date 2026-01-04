@@ -1,14 +1,55 @@
-import { Component } from '@angular/core';
-import {RouterOutlet} from '@angular/router';
+import { Component, inject, signal, computed, OnInit, OnDestroy } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet, NavigationEnd } from '@angular/router';
+import { AuthService } from '@core/auth/auth.service';
+import { filter, Subscription } from 'rxjs';
+import {UserDefaultAvatar} from '@shared/components/icon/user-default-avatar';
 
 @Component({
   selector: 'app-app-layout',
   imports: [
-    RouterOutlet
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
+    UserDefaultAvatar
   ],
   templateUrl: './app-layout.html',
-  styleUrl: './app-layout.css',
+  styleUrl: './app-layout.scss',
 })
-export class AppLayout {
+export class AppLayout implements OnInit, OnDestroy {
+  private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
+  isMobileMenuOpen = signal(false);
+  currentRoute = signal<string>('');
+  private routerSubscription?: Subscription;
+
+  isProfileActive = computed(() => this.currentRoute().includes('/profile'));
+
+  ngOnInit(): void {
+    this.currentRoute.set(this.router.url);
+
+    this.routerSubscription = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe((event: any) => {
+      this.currentRoute.set(event.url);
+      this.isMobileMenuOpen.set(false);
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.routerSubscription?.unsubscribe();
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen.update(open => !open);
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen.set(false);
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
 }

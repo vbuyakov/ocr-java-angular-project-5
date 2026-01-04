@@ -1,14 +1,12 @@
 package om.openclassrooms.mddapi.user.controller;
 
+import jakarta.validation.Valid;
 import om.openclassrooms.mddapi.user.model.User;
 import om.openclassrooms.mddapi.user.payload.ProfileResponse;
 import om.openclassrooms.mddapi.user.payload.ProfileUpdateRequest;
 import om.openclassrooms.mddapi.user.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -25,7 +23,7 @@ public class UserController {
     }
 
     @PutMapping("/profile")
-    public ProfileResponse updateProfile(ProfileUpdateRequest profile, @AuthenticationPrincipal User user){
+    public ProfileResponse updateProfile(@Valid @RequestBody ProfileUpdateRequest profile, @AuthenticationPrincipal User user){
         return userService.updateUserProfile(profile, user.getId());
     }
 }

@@ -72,6 +72,7 @@ export class RegisterPage {
     });
   }
 
+  //Todo: Move to Common Reused in all forms
   private handleError(error: HttpErrorResponse): void {
     if (error.status === 409 && error.error?.errors) {
       // Conflict errors (duplicates) - returns { "errors": ["message1", "message2"] }
@@ -87,7 +88,7 @@ export class RegisterPage {
         }
       });
       this.fieldErrors.set(fieldErrors);
-      
+
       // Also check for general errors in the response
       if (error.error.message) {
         this.generalErrors.set([error.error.message]);

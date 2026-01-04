@@ -2,7 +2,6 @@ import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
 import { Router, RouterLink } from '@angular/router';
-import { passwordValidator, getPasswordErrorMessage } from '@shared/validators/password.validator';
 import { AuthApiService } from '../../auth-api.service';
 import { AuthService } from '@core/auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -29,15 +28,13 @@ export class LoginPage {
   constructor() {
     this.loginForm = this.formBuilder.group({
       login: ['', [Validators.required]],
-      password: ['', [Validators.required, passwordValidator()]],
+      password: ['', [Validators.required]],
     });
   }
 
   get passwordControl() {
     return this.loginForm.get('password');
   }
-
-  getPasswordErrorMessage = getPasswordErrorMessage;
 
   onSubmit(): void {
     if (this.loginForm.invalid || this.isSubmitting()) {
@@ -77,7 +74,7 @@ export class LoginPage {
         }
       });
       this.fieldErrors.set(fieldErrors);
-      
+
       if (error.error.message) {
         this.generalErrors.set([error.error.message]);
       }

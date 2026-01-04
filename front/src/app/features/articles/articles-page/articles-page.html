@@ -1,1 +1,62 @@
-<p>articles-page works!</p>
+<section class="min-h-screen bg-white">
+  <div class="container-page py-8">
+    <!-- Header Actions -->
+    <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+
+      <a
+        routerLink="/articles/create"
+        class="btn-primary"
+      >
+        Créer un article
+      </a>
+
+      <div class="flex items-center gap-2">
+        <span class="text-lg text-mdd-text">Trier par:</span>
+        <select class="
+        cursor-pointer
+        focus:outline-none
+        border-b-accent-900 border-b-2 border-dashed
+        appearance-none"
+        [(ngModel)]="orderByValue"
+        >
+          @for (key of OrderByKeys ; track key) {
+            <option [value]="key" >{{ OrderBy[key] }}</option>
+          }
+        </select>
+        <button class="cursor-pointer size-6 flex items-center justify-center rounded-sm
+                hover:border-accent-700 hover:border hover:border-solid"
+                (click)="orderToChanged()">
+                <img src="images/common/arrow-up.svg" alt="order direction"
+               [class.rotate-180]="orderToValue() === 'asc'"
+
+          >
+        </button>
+      </div>
+    </div>
+
+    <!-- Articles Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+      @for (article of articles$ | async; track article.id) {
+        <article class="
+        bg-secondary-100
+        rounded-lg
+        p-6
+        transition-all
+        cursor-pointer
+        min-h-[230px]
+        hover:shadow-md/10 hover:translate-y-1"
+        (click)="showArticle(article.id)"
+        >
+          <h2 class="text-xl font-semibold text-mdd-text mb-3">{{article.title}}</h2>
+          <div class="flex text-sm text-secondary-600 mb-4 gap-16">
+            <span>{{article.createdAt}}</span>
+            <span>{{article.author}}</span>
+          </div>
+          <p class="text-sm/5 text-mdd-text ellipsis-5-lines">
+            {{article.content}}
+          </p>
+        </article>
+      }
+    </div>
+  </div>
+</section>
