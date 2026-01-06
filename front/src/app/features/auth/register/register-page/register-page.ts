@@ -55,21 +55,23 @@ export class RegisterPage {
 
     const formValue = this.registerForm.value;
 
-    this.authApiService.register({
-      username: formValue.username.trim(),
-      email: formValue.email.trim(),
-      password: formValue.password,
-    }).subscribe({
-      next: () => {
-        this.isSubmitting.set(false);
-        this.toastService.show('Inscription réussie !', 'success', 3000);
-        this.router.navigate(['/auth/login']);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isSubmitting.set(false);
-        this.handleError(error);
-      }
-    });
+    this.authApiService
+      .register({
+        username: formValue.username.trim(),
+        email: formValue.email.trim(),
+        password: formValue.password,
+      })
+      .subscribe({
+        next: () => {
+          this.isSubmitting.set(false);
+          this.toastService.show('Inscription réussie !', 'success', 3000);
+          this.router.navigate(['/auth/login']);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.isSubmitting.set(false);
+          this.handleError(error);
+        },
+      });
   }
 
   //Todo: Move to Common Reused in all forms
@@ -82,7 +84,7 @@ export class RegisterPage {
     } else if (error.status === 400 && error.error) {
       // Validation errors - returns { "fieldName": "error message", ... }
       const fieldErrors: Record<string, string> = {};
-      Object.keys(error.error).forEach(field => {
+      Object.keys(error.error).forEach((field) => {
         if (field !== 'errors' && field !== 'message') {
           fieldErrors[field] = error.error[field];
         }
@@ -109,4 +111,3 @@ export class RegisterPage {
 
   getPasswordErrorMessage = getPasswordErrorMessage;
 }
-
