@@ -1,3 +1,3 @@
 export interface CreateArticleCommentRequestDto {
-    comment: string
+  comment: string;
 }

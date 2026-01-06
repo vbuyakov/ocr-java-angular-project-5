@@ -1,0 +1,36 @@
+<div class="flex flex-col gap-y-9 md:pl-10 md:pr-15 text-xl">
+  @for(comment of comments(); track comment.id) {
+    <div class="flex gap-x-9 flex-col md:flex-row gap-y-2">
+      <div class="text-right md:pt-2">{{comment.author}}</div>
+      <div class="p-4 min-h-20 bg-secondary-200 rounded-2xl flex-1">{{ comment.content}}</div>
+    </div>
+}
+</div>
+
+
+<section class=" mt-4 md:mt-10">
+<form
+  (ngSubmit)="onSubmit()"
+  [formGroup]="commentForm"
+>
+  <div class="flex md:pl-10 gap-4 items-center">
+    <div class="flex-1 ">
+      <app-form-input
+        [errorMessage]="getFieldError('comment')"
+        [formControlDisabled]="isSubmitting()"
+        [rows]="5"
+        formControlName="comment"
+        placeholder="Contenu de l’article"
+        type="textarea"
+      >
+      </app-form-input>
+    </div>
+    <div>
+      <button (click)="onSubmit()" type="submit" class="w-11 hover:opacity-90 cursor-pointer">
+        <img src="/images/common/send-icon.svg">
+      </button>
+    </div>
+  </div>
+
+</form>
+</section>

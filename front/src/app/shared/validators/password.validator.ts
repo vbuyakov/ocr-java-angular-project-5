@@ -30,7 +30,7 @@ export function passwordValidator(): ValidatorFn {
     }
 
     // Check for at least one special character
-    if (!/[!@#$%^&*()_+\-=][{};':"\\|,.<>/?]/.test(value)) {
+    if (!/[!@#$%^&*()_+\-=\]\[{};':"\\|,.<>/?]/.test(value)) {
       errors['hasSpecialChar'] = true;
     }
 

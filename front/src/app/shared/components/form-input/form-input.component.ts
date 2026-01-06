@@ -1,28 +1,27 @@
-import {Component, forwardRef, input} from '@angular/core';
+import { Component, forwardRef, input } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {NgClass} from '@angular/common';
+import { NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-form-input',
   standalone: true,
-  imports: [
-    NgClass
-  ],
+  imports: [NgClass],
   templateUrl: './form-input.component.html',
   styleUrl: './form-input.component.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => FormInputComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 export class FormInputComponent implements ControlValueAccessor {
   label = input<string>('');
-  type = input<'text' | 'email' | 'password'>('text');
+  type = input<'text' | 'email' | 'password' | 'textarea'>('text');
   placeholder = input<string>('');
   required = input<boolean>(false);
+  rows = input(1);
   disabled = input<boolean>(false);
   errorMessage = input<string | undefined>(undefined);
   // Support for form control disabled state

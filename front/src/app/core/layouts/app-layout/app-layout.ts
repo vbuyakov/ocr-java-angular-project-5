@@ -47,4 +47,8 @@ export class AppLayout implements OnInit, OnDestroy {
     this.authService.logout();
     this.router.navigate(['/']);
   }
+
+  get isAuthenticated(): boolean {
+    return this.authService.isAuthenticated();
+  }
 }

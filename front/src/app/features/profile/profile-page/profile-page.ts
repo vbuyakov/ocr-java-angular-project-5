@@ -9,6 +9,8 @@ import { UserProfileApiService } from '@features/profile/user-profile-api.servic
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserProfileResponseDto } from '@features/profile/dtos/user-profile-response.dto';
 import { ToastService } from '@shared/services/toast.service';
+import { ServerError, handleServerError } from '@shared/validators/form-errors-handler';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-profile-page',
@@ -74,51 +76,31 @@ export class ProfilePage implements OnInit {
     this.generalErrors.set([]);
 
     const formValue: UserProfileRequestDto = this.profileForm.value;
-    this.userProfileApiService.updateProfile(formValue).subscribe({
-      next: (updatedProfile: UserProfileResponseDto) => {
-        this.isSubmitting.set(false);
-        this.toastService.show('Votre profil a bien été mis à jour !', 'success', 3000);
-        this.profileForm.setValue(
-          {
-            username: updatedProfile.username,
-            email: updatedProfile.email,
-            password: '',
-          },
-          { emitEvent: false },
-        );
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isSubmitting.set(false);
-        this.handleError(error);
-      },
-    });
-  }
-
-  //Todo: Move to Common Reused in all forms
-  private handleError(error: HttpErrorResponse): void {
-    if (error.status === 409 && error.error?.errors) {
-      // Conflict errors (duplicates) - returns { "errors": ["message1", "message2"] }
-      const errors = error.error.errors as string[];
-      this.generalErrors.set(errors);
-      this.fieldErrors.set({});
-    } else if (error.status === 400 && error.error) {
-      // Validation errors - returns { "fieldName": "error message", ... }
-      const fieldErrors: Record<string, string> = {};
-      Object.keys(error.error).forEach((field) => {
-        if (field !== 'errors' && field !== 'message') {
-          fieldErrors[field] = error.error[field];
-        }
+    this.userProfileApiService
+      .updateProfile(formValue)
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.set(false);
+        }),
+      )
+      .subscribe({
+        next: (updatedProfile: UserProfileResponseDto) => {
+          this.toastService.show('Votre profil a bien été mis à jour !', 'success', 3000);
+          this.profileForm.setValue(
+            {
+              username: updatedProfile.username,
+              email: updatedProfile.email,
+              password: '',
+            },
+            { emitEvent: false },
+          );
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          const serverError: ServerError = handleServerError(errorResponse);
+          this.generalErrors.set(serverError.generalErrors || []);
+          this.fieldErrors.set(serverError.fieldErrors || {});
+        },
       });
-      this.fieldErrors.set(fieldErrors);
-
-      // Also check for general errors in the response
-      if (error.error.message) {
-        this.generalErrors.set([error.error.message]);
-      }
-    } else {
-      // Other errors
-      this.generalErrors.set([error.error?.message || 'Une erreur est survenue']);
-    }
   }
 
   getFieldError(field: string): string | undefined {

@@ -1,7 +1,7 @@
-import {inject, Injectable} from '@angular/core';
-import {ApiService} from '@core/api/api.service';
-import {Observable} from 'rxjs';
-import {TopicResponseDto} from '@features/topics/dtos/topic-response.dto';
+import { inject, Injectable } from '@angular/core';
+import { ApiService } from '@core/api/api.service';
+import { Observable } from 'rxjs';
+import { TopicResponseDto } from '@features/topics/dtos/topic-response.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +17,10 @@ export class TopicsApiService {
     return this.apiService.get('/topics/subscribed');
   }
 
+  getTopicsForSelector(): Observable<TopicResponseDto[]> {
+    return this.apiService.get('/topics/selector');
+  }
+
   subscribeToTopic(topicId: number): Observable<any> {
     return this.apiService.post(`/topics/${topicId}/subscribe`, {});
   }
@@ -24,5 +28,4 @@ export class TopicsApiService {
   unsubscribeFromTopic(topicId: number): Observable<any> {
     return this.apiService.delete(`/topics/${topicId}/subscribe`);
   }
-
 }

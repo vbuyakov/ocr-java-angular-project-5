@@ -72,8 +72,22 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.UNSUPPORTED_MEDIA_TYPE) // 415
                 .body(Map.of(
-                        "error", "Unsupported media type",
+                        "error", "unsupported_media_type",
                         "message", ex.getMessage()
+                ));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleUnexpected(
+            Exception ex) {
+
+        ex.printStackTrace();
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of(
+                        "error", "internal_error",
+                        "message", "Une erreur interne est survenue"
                 ));
     }
 }

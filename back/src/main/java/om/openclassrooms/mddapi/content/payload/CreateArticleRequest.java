@@ -2,6 +2,7 @@ package om.openclassrooms.mddapi.content.payload;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record CreateArticleRequest(
@@ -13,7 +14,7 @@ public record CreateArticleRequest(
         @Size(max = 10000)
         String content,
 
-        @NotEmpty
+        @NotNull
         Long topicId
 ) {
 }
