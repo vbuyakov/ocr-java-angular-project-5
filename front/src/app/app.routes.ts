@@ -23,7 +23,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'not-found',
-        loadComponent: () => import('@core/errors/not-found/not-found').then((m) => m.NotFound),
+        loadComponent: () => import('@app/features/errors/not-found/not-found').then((m) => m.NotFound),
       },
     ],
   },
