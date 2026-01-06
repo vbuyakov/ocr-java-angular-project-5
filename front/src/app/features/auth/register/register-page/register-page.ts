@@ -5,7 +5,13 @@ import { FormInputComponent } from '@shared/components/form-input/form-input.com
 import { AuthApiService } from '@features/auth/auth-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '@shared/services/toast.service';
-import { passwordValidator, getPasswordErrorMessage } from '@shared/validators/password.validator';
+import { passwordValidator } from '@shared/validators/password.validator';
+import {
+  ServerError,
+  handleServerError,
+  getFieldError,
+} from '@shared/validators/form-errors-handler';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-register-page',
@@ -32,18 +38,6 @@ export class RegisterPage {
     });
   }
 
-  get usernameControl() {
-    return this.registerForm.get('username');
-  }
-
-  get emailControl() {
-    return this.registerForm.get('email');
-  }
-
-  get passwordControl() {
-    return this.registerForm.get('password');
-  }
-
   onSubmit(): void {
     if (this.registerForm.invalid || this.isSubmitting()) {
       return;
@@ -61,53 +55,32 @@ export class RegisterPage {
         email: formValue.email.trim(),
         password: formValue.password,
       })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.set(false);
+        }),
+      )
       .subscribe({
         next: () => {
-          this.isSubmitting.set(false);
           this.toastService.show('Inscription réussie !', 'success', 3000);
           this.router.navigate(['/auth/login']);
         },
-        error: (error: HttpErrorResponse) => {
-          this.isSubmitting.set(false);
-          this.handleError(error);
+        error: (errorResponse: HttpErrorResponse) => {
+          const serverError: ServerError = handleServerError(errorResponse);
+          this.generalErrors.set(serverError.generalErrors || []);
+          this.fieldErrors.set(serverError.fieldErrors || {});
         },
       });
   }
 
-  //Todo: Move to Common Reused in all forms
-  private handleError(error: HttpErrorResponse): void {
-    if (error.status === 409 && error.error?.errors) {
-      // Conflict errors (duplicates) - returns { "errors": ["message1", "message2"] }
-      const errors = error.error.errors as string[];
-      this.generalErrors.set(errors);
-      this.fieldErrors.set({});
-    } else if (error.status === 400 && error.error) {
-      // Validation errors - returns { "fieldName": "error message", ... }
-      const fieldErrors: Record<string, string> = {};
-      Object.keys(error.error).forEach((field) => {
-        if (field !== 'errors' && field !== 'message') {
-          fieldErrors[field] = error.error[field];
-        }
-      });
-      this.fieldErrors.set(fieldErrors);
-
-      // Also check for general errors in the response
-      if (error.error.message) {
-        this.generalErrors.set([error.error.message]);
-      }
-    } else {
-      // Other errors
-      this.generalErrors.set([error.error?.message || 'Une erreur est survenue']);
-    }
-  }
-
   getFieldError(fieldName: string): string | undefined {
-    return this.fieldErrors()[fieldName];
+    if (this.fieldErrors()[fieldName]) {
+      return this.fieldErrors()[fieldName];
+    }
+    return getFieldError(this.registerForm, fieldName);
   }
 
   getGeneralErrors(): string[] {
     return this.generalErrors();
   }
-
-  getPasswordErrorMessage = getPasswordErrorMessage;
 }

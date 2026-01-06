@@ -89,7 +89,6 @@ export class ArticleCreatePage implements OnInit {
           this.fieldErrors.set(serverError.fieldErrors || {});
         },
       });
-    this.isSubmitting.set(false);
   }
 
   protected readonly top = top;

@@ -30,18 +30,18 @@
 
       <app-form-input formControlName="username" label="Nom d'utilisateur" type="text"
         placeholder="Entrez votre nom d'utilisateur"
-        [errorMessage]="getFieldError('username') || (usernameControl?.touched && usernameControl?.invalid ? 'Ce champ est requis' : undefined)"
+        [errorMessage]="getFieldError('username')"
         [formControlDisabled]="isSubmitting()" [required]="true">
       </app-form-input>
 
       <app-form-input formControlName="email" label="Adresse e-mail" type="email" placeholder="votre@email.com"
-        [errorMessage]="getFieldError('email') || (emailControl?.touched && emailControl?.invalid ? (emailControl?.errors?.['email'] ? 'Email invalide' : 'Ce champ est requis') : undefined)"
+        [errorMessage]="getFieldError('email')"
         [formControlDisabled]="isSubmitting()" [required]="true">
       </app-form-input>
 
       <app-form-input formControlName="password" label="Mot de passe" type="password"
         placeholder="Entrez votre mot de passe"
-        [errorMessage]="getFieldError('password') || (passwordControl?.touched && passwordControl?.invalid ? (getPasswordErrorMessage(passwordControl?.errors || null) || 'Ce champ est requis') : undefined)"
+        [errorMessage]="getFieldError('password')"
         [formControlDisabled]="isSubmitting()" [required]="true">
       </app-form-input>
 

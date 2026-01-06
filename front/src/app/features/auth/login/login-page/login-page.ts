@@ -6,6 +6,12 @@ import { AuthApiService } from '../../auth-api.service';
 import { AuthService } from '@core/auth/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ToastService } from '@shared/services/toast.service';
+import {
+  ServerError,
+  handleServerError,
+  getFieldError,
+} from '@shared/validators/form-errors-handler';
+import { finalize } from 'rxjs';
 
 @Component({
   selector: 'app-login-page',
@@ -32,10 +38,6 @@ export class LoginPage {
     });
   }
 
-  get passwordControl() {
-    return this.loginForm.get('password');
-  }
-
   onSubmit(): void {
     if (this.loginForm.invalid || this.isSubmitting()) {
       return;
@@ -47,48 +49,35 @@ export class LoginPage {
 
     const formValue = this.loginForm.value;
 
-    this.authApiService.login({
-      login: formValue.login.trim(),
-      password: formValue.password,
-    }).subscribe({
-      next: (response) => {
-        this.isSubmitting.set(false);
-        this.authService.login(response.token);
-        this.toastService.show('Connexion réussie !', 'success', 3000);
-        this.router.navigate(['/articles']);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.isSubmitting.set(false);
-        this.handleError(error);
-      }
-    });
-  }
-
-  private handleError(error: HttpErrorResponse): void {
-    if (error.status === 400 && error.error) {
-      // Validation errors - returns { "fieldName": "error message", ... }
-      const fieldErrors: Record<string, string> = {};
-      Object.keys(error.error).forEach(field => {
-        if (field !== 'errors' && field !== 'message') {
-          fieldErrors[field] = error.error[field];
-        }
+    this.authApiService
+      .login({
+        login: formValue.login.trim(),
+        password: formValue.password,
+      })
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.set(false);
+        }),
+      )
+      .subscribe({
+        next: (response) => {
+          this.authService.login(response.token);
+          this.toastService.show('Connexion réussie !', 'success', 3000);
+          this.router.navigate(['/articles']);
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          const serverError: ServerError = handleServerError(errorResponse);
+          this.generalErrors.set(serverError.generalErrors || []);
+          this.fieldErrors.set(serverError.fieldErrors || {});
+        },
       });
-      this.fieldErrors.set(fieldErrors);
-
-      if (error.error.message) {
-        this.generalErrors.set([error.error.message]);
-      }
-    } else if (error.status === 401 || error.status === 403) {
-      // Unauthorized/Forbidden - bad credentials
-      this.generalErrors.set([error.error?.message || 'Identifiants incorrects']);
-    } else {
-      // Other errors
-      this.generalErrors.set([error.error?.message || 'Une erreur est survenue']);
-    }
   }
 
   getFieldError(fieldName: string): string | undefined {
-    return this.fieldErrors()[fieldName];
+    if (this.fieldErrors()[fieldName]) {
+      return this.fieldErrors()[fieldName];
+    }
+    return getFieldError(this.loginForm, fieldName);
   }
 
   getGeneralErrors(): string[] {

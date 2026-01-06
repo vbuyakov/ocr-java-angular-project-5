@@ -3,13 +3,17 @@ import { TopicsApiService } from '@features/topics/topics-api.service';
 import { TopicResponseDto } from '@features/topics/dtos/topic-response.dto';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { getPasswordErrorMessage, passwordValidator } from '@shared/validators/password.validator';
+import { passwordValidator } from '@shared/validators/password.validator';
 import { UserProfileRequestDto } from '@features/profile/dtos/user-profile-request.dto';
 import { UserProfileApiService } from '@features/profile/user-profile-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserProfileResponseDto } from '@features/profile/dtos/user-profile-response.dto';
 import { ToastService } from '@shared/services/toast.service';
-import { ServerError, handleServerError } from '@shared/validators/form-errors-handler';
+import {
+  ServerError,
+  handleServerError,
+  getFieldError,
+} from '@shared/validators/form-errors-handler';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -104,19 +108,9 @@ export class ProfilePage implements OnInit {
   }
 
   getFieldError(field: string): string | undefined {
-    const fildControl = this.profileForm.get(field);
     if (this.fieldErrors()[field]) {
       return this.fieldErrors()[field];
-    } else if (fildControl?.invalid && (fildControl?.dirty || fildControl?.touched)) {
-      if (fildControl.hasError('required')) {
-        return 'Ce champ est requis';
-      }
-      return fildControl.hasError('email')
-        ? 'Email invalide'
-        : fildControl.hasError('password')
-          ? getPasswordErrorMessage(fildControl)
-          : undefined;
     }
-    return undefined;
+    return getFieldError(this.profileForm, field);
   }
 }

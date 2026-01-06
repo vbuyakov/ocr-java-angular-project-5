@@ -45,7 +45,7 @@
         label="E-mail ou nom d'utilisateur"
         type="text"
         placeholder="Entrez votre e-mail ou nom d'utilisateur"
-        [errorMessage]="getFieldError('login') || (loginForm.get('login')?.touched && loginForm.get('login')?.invalid ? 'Ce champ est requis' : undefined)"
+        [errorMessage]="getFieldError('login')"
         [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
@@ -55,7 +55,7 @@
         label="Mot de passe"
         type="password"
         placeholder="Entrez votre mot de passe"
-        [errorMessage]="passwordControl?.touched && passwordControl?.invalid ? 'Ce champ est requis' : undefined"
+        [errorMessage]="getFieldError('password')"
         [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
