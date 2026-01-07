@@ -34,9 +34,9 @@ export class RegisterPage {
 
   constructor() {
     this.registerForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, passwordValidator()]],
+      username: ['', [Validators.required,Validators.maxLength(255)]],
+      email: ['', [Validators.required, Validators.email,Validators.maxLength(255)]],
+      password: ['', [Validators.required, passwordValidator(), Validators.maxLength(255)]],
     });
   }
 

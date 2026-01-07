@@ -35,8 +35,8 @@ export class LoginPage {
 
   constructor() {
     this.loginForm = this.formBuilder.group({
-      login: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+      login: ['', [Validators.required, Validators.maxLength(255)]],
+      password: ['', [Validators.required, Validators.maxLength(255)]],
     });
   }
 

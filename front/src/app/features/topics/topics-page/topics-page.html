@@ -1,36 +1,5 @@
 <section class="min-h-screen bg-white">
   <div class="container-page py-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-      @for (topic of topicsList(); track topic.id) {
-        <article class="
-        bg-secondary-100
-        rounded-lg
-        p-6
-        transition-all
-        min-h-56
-        flex flex-col justify-between items-center
-        "
-        >
-          <section>
-          <h2 class="text-xl font-semibold text-mdd-text mb-3">{{topic.name}}</h2>
-          <p class="text-sm/5 text-mdd-text ellipsis-5-lines">
-            {{topic.description}}
-          </p>
-          </section>
-          <button class="btn-primary w-50"
-            (click)="subscribeToTopic(topic.id)"
-          [disabled]="topic.isUserSubscribed"]
-          >
-            @if (topic.isUserSubscribed) {
-              Déjà abonné
-            } @else {
-              S’abonner
-            }
-          </button>
-
-
-        </article>
-      }
-    </div>
+    <app-topics-list />
   </div>
 </section>

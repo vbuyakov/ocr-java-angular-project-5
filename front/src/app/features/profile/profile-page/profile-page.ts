@@ -1,7 +1,6 @@
 import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import { TopicsApiService } from '@app/shared/services/topics-api.service';
-import { TopicResponseDto } from '@app/shared/dtos/topic-response.dto';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
+import { TopicsList } from '@shared/components/topics-list/topics-list';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordValidator } from '@shared/validators/password.validator';
 import { UserProfileRequestDto } from '@features/profile/dtos/user-profile-request.dto';
@@ -19,17 +18,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-profile-page',
-  imports: [FormInputComponent, ReactiveFormsModule],
+  imports: [FormInputComponent, ReactiveFormsModule, TopicsList],
   templateUrl: './profile-page.html',
   styleUrl: './profile-page.css',
 })
 export class ProfilePage implements OnInit {
-  private readonly topicsApiService = inject(TopicsApiService);
   private readonly userProfileApiService = inject(UserProfileApiService);
   private readonly toastService = inject(ToastService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly destroyRef = inject(DestroyRef);
-  topicsList = signal<TopicResponseDto[]>([]);
 
   profileForm: FormGroup;
 
@@ -39,15 +36,14 @@ export class ProfilePage implements OnInit {
 
   constructor() {
     this.profileForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [passwordValidator()]],
+      username: ['', [Validators.required, Validators.maxLength(255)]],
+      email: ['', [Validators.required, Validators.email, Validators.maxLength(255)]],
+      password: ['', [passwordValidator(), Validators.maxLength(255)]],
     });
   }
 
   ngOnInit() {
     this.loadUserProfile();
-    this.loadTopics();
   }
 
   loadUserProfile() {
@@ -63,22 +59,6 @@ export class ProfilePage implements OnInit {
           },
           { emitEvent: false },
         );
-      });
-  }
-
-  loadTopics() {
-    this.topicsApiService
-      .getTopicsForUser()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((topics) => this.topicsList.set(topics));
-  }
-
-  unsubscribeFromTopic(topicId: number) {
-    this.topicsApiService
-      .unsubscribeFromTopic(topicId)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => {
-        this.topicsList.update((topics) => topics.filter((topic) => topic.id !== topicId));
       });
   }
 
