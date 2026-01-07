@@ -21,7 +21,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
@@ -88,10 +87,8 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     SecurityFilterChain publicChain(HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
-        MvcRequestMatcher authMatcher =
-                new MvcRequestMatcher(introspector, "/auth/**");
         http
-                .securityMatcher(authMatcher)
+                .securityMatcher("/auth/**", "swagger-ui.html", "/swagger-ui/**", "/v3/api-docs*/**")
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth.anyRequest().permitAll());
 

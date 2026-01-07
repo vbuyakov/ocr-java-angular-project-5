@@ -53,10 +53,4 @@ private final TopicService topicService;
         return topicService.getSubscribedToUserTopics(user.getId());
 
     }
-
-    // TODO: Remove this method
-    @PostMapping
-    public void createTopic(@RequestBody TopicRequest topic){ //TODO: Need to remove because don't need in UI
-        this.topicService.createTopic(topic);
-    }
 }

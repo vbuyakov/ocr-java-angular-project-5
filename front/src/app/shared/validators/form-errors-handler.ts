@@ -51,7 +51,7 @@ export function getFieldError(form: FormGroup, field: string): string | undefine
     return fildControl.hasError('email')
       ? 'Email invalide'
       : fildControl.hasError('password')
-        ? getPasswordErrorMessage(fildControl)
+        ? getPasswordErrorMessage(fildControl.errors)
         : undefined;
   }
   return undefined;

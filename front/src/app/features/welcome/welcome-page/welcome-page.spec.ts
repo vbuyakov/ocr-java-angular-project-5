@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideRouter } from '@angular/router';
 import { WelcomePage } from './welcome-page';
 
 describe('WelcomePage', () => {
@@ -8,13 +8,13 @@ describe('WelcomePage', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WelcomePage]
-    })
-    .compileComponents();
+      imports: [WelcomePage],
+      providers: [provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(WelcomePage);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

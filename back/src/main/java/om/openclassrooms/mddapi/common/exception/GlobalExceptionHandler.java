@@ -38,6 +38,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errors);
     }
 
+    @ExceptionHandler(WrongParametersException.class)
+    public ResponseEntity<MessageResponse> handleWrongParameters(WrongParametersException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse(ex.getMessage()));
+    }
+
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<Map<String, List<String>>> handleConflict(ConflictException ex){
         List<String> errors = ex.getMessageKeys()
