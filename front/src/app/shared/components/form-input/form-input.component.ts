@@ -31,9 +31,11 @@ export class FormInputComponent implements ControlValueAccessor {
   inputId = `form-input-${Math.random().toString(36).substring(2, 9)}`;
 
   value = '';
+  
   private _disabled = false;
-  private onChange = (value: string) => {};
-  private onTouched = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private onChange = (_value: string) => { /* noop */ };
+  private onTouched = () => { /* noop */ };
 
   get hasError(): boolean {
     return !!this.errorMessage();

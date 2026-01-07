@@ -45,7 +45,10 @@
         cursor-pointer
         min-h-56
         hover:shadow-md/10 hover:translate-y-1"
+        tabindex="0"
+        role="button"
         (click)="showArticle(article.id)"
+        (keydown.enter)="showArticle(article.id)"
         >
           <h2 class="text-xl font-semibold text-mdd-text mb-3">{{article.title}}</h2>
           <div class="flex text-sm text-secondary-600 mb-4 gap-16">

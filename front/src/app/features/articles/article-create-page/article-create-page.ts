@@ -1,4 +1,5 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
 import {
@@ -9,9 +10,9 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { TopicsApiService } from '@features/topics/topics-api.service';
+import { TopicsApiService } from '@app/shared/services/topics-api.service';
 import { ToastService } from '@shared/services/toast.service';
-import { TopicResponseDto } from '@features/topics/dtos/topic-response.dto';
+import { TopicResponseDto } from '@app/shared/dtos/topic-response.dto';
 import { CreateArticleRequestDto } from '@features/articles/dtos/create-article-request.dto';
 import { NgClass } from '@angular/common';
 import {
@@ -35,6 +36,7 @@ export class ArticleCreatePage implements OnInit {
   private readonly toastService = inject(ToastService);
   private readonly articleApiService = inject(ArticlesApiService);
   private readonly router = inject(Router);
+  private readonly destroyRef = inject(DestroyRef);
   articleForm: FormGroup;
 
   isSubmitting = signal(false);
@@ -51,7 +53,10 @@ export class ArticleCreatePage implements OnInit {
   }
 
   ngOnInit() {
-    this.topicsApiService.getTopicsForSelector().subscribe((topics) => this.topicsList.set(topics));
+    this.topicsApiService
+      .getTopicsForSelector()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((topics) => this.topicsList.set(topics));
   }
 
   getFieldError(field: string): string | undefined {
@@ -77,6 +82,7 @@ export class ArticleCreatePage implements OnInit {
         finalize(() => {
           this.isSubmitting.set(false);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {

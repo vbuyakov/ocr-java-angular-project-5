@@ -1,4 +1,4 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, signal } from '@angular/core';
 import { ArticlesApiService } from '@features/articles/articles-api.service';
 import { ArticleCommentDto } from '@features/articles/dtos/article-comment.dto';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
@@ -18,6 +18,7 @@ import { ToastService } from '@shared/services/toast.service';
 import { CreateArticleCommentRequestDto } from '@features/articles/dtos/create-article-comment-request.dto';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-article-comments',
@@ -29,6 +30,7 @@ export class ArticleComments implements OnInit {
   private readonly formBuilder = inject(FormBuilder);
   private readonly toastService = inject(ToastService);
   private articlesApiService = inject(ArticlesApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   articleId = input.required<number>();
 
@@ -50,9 +52,12 @@ export class ArticleComments implements OnInit {
   }
 
   loadComments() {
-    this.articlesApiService.getComments(this.articleId()).subscribe((result) => {
-      this.comments.set(result);
-    });
+    this.articlesApiService
+      .getComments(this.articleId())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((result) => {
+        this.comments.set(result);
+      });
   }
 
   onSubmit() {
@@ -71,6 +76,7 @@ export class ArticleComments implements OnInit {
         finalize(() => {
           this.isSubmitting.set(false);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {

@@ -1,6 +1,6 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { TopicsApiService } from '@features/topics/topics-api.service';
-import { TopicResponseDto } from '@features/topics/dtos/topic-response.dto';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { TopicsApiService } from '@app/shared/services/topics-api.service';
+import { TopicResponseDto } from '@app/shared/dtos/topic-response.dto';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordValidator } from '@shared/validators/password.validator';
@@ -15,6 +15,7 @@ import {
   getFieldError,
 } from '@shared/validators/form-errors-handler';
 import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-profile-page',
@@ -27,6 +28,7 @@ export class ProfilePage implements OnInit {
   private readonly userProfileApiService = inject(UserProfileApiService);
   private readonly toastService = inject(ToastService);
   private readonly formBuilder = inject(FormBuilder);
+  private readonly destroyRef = inject(DestroyRef);
   topicsList = signal<TopicResponseDto[]>([]);
 
   profileForm: FormGroup;
@@ -49,26 +51,35 @@ export class ProfilePage implements OnInit {
   }
 
   loadUserProfile() {
-    this.userProfileApiService.getProfile().subscribe((profileResponse) => {
-      this.profileForm.setValue(
-        {
-          username: profileResponse.username,
-          email: profileResponse.email,
-          password: '',
-        },
-        { emitEvent: false },
-      );
-    });
+    this.userProfileApiService
+      .getProfile()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((profileResponse) => {
+        this.profileForm.setValue(
+          {
+            username: profileResponse.username,
+            email: profileResponse.email,
+            password: '',
+          },
+          { emitEvent: false },
+        );
+      });
   }
 
   loadTopics() {
-    this.topicsApiService.getTopicsForUser().subscribe((topics) => this.topicsList.set(topics));
+    this.topicsApiService
+      .getTopicsForUser()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((topics) => this.topicsList.set(topics));
   }
 
   unsubscribeFromTopic(topicId: number) {
-    this.topicsApiService.unsubscribeFromTopic(topicId).subscribe(() => {
-      this.topicsList.update((topics) => topics.filter((topic) => topic.id !== topicId));
-    });
+    this.topicsApiService
+      .unsubscribeFromTopic(topicId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.topicsList.update((topics) => topics.filter((topic) => topic.id !== topicId));
+      });
   }
 
   onSubmit() {
@@ -86,6 +97,7 @@ export class ProfilePage implements OnInit {
         finalize(() => {
           this.isSubmitting.set(false);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: (updatedProfile: UserProfileResponseDto) => {

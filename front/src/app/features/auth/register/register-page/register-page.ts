@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
@@ -12,6 +12,7 @@ import {
   getFieldError,
 } from '@shared/validators/form-errors-handler';
 import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-register-page',
@@ -24,6 +25,7 @@ export class RegisterPage {
   private readonly authApiService = inject(AuthApiService);
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   registerForm: FormGroup;
   isSubmitting = signal(false);
@@ -59,6 +61,7 @@ export class RegisterPage {
         finalize(() => {
           this.isSubmitting.set(false);
         }),
+        takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: () => {

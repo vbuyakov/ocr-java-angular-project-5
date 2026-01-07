@@ -38,7 +38,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // 1️⃣ No token → continue (public endpoints, login, etc.)
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -46,13 +45,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         final String jwt = authHeader.substring(7);
 
-        try {
-            // 2️⃣ Validate token (this MUST throw on error)
-            if (!jwtService.isTokenValid(jwt)) {
-                throw new BadCredentialsException("Invalid JWT");
-            }
+        if (!jwtService.isTokenValid(jwt)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
-            // 3️⃣ Authenticate only if not already authenticated
+        try {
+            // Authenticate only if not already authenticated
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 Long userId = jwtService.extractUserId(jwt);
 

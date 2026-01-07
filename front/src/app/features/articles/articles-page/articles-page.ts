@@ -4,7 +4,7 @@ import { OrderBy } from '../dtos/article-request.dto';
 import {FormsModule} from '@angular/forms';
 import {ArticlesApiService} from '@features/articles/articles-api.service';
 import {ArticleResponseDto} from '@features/articles/dtos/aticle-response.dto';
-import {Observable, tap} from 'rxjs';
+import {Observable} from 'rxjs';
 import {AsyncPipe} from '@angular/common';
 
 type OrderByKey = keyof typeof OrderBy;
@@ -31,13 +31,7 @@ export class ArticlesPage {
 
   constructor() {
     effect(()=>{
-      this.articles$ = this.articlesApiService.getAll(this.orderByValue(), this.orderToValue()).pipe(
-        tap(() => {
-          console.log('articles loaded For');
-          console.log('orderTo is ', this.orderToValue());
-          console.log('orderBy is ', this.orderByValue());
-        })
-      );
+      this.articles$ = this.articlesApiService.getAll(this.orderByValue(), this.orderToValue());
     });
   }
 

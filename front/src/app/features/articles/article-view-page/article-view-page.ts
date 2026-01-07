@@ -1,10 +1,10 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, DestroyRef, inject, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ArticleResponseDto } from '@features/articles/dtos/aticle-response.dto';
 import { ArticlesApiService } from '@features/articles/articles-api.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ArticleComments } from '@features/articles/components/article-comments/article-comments';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 
 @Component({
@@ -17,6 +17,7 @@ export class ArticleViewPage {
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private articlesApiService = inject(ArticlesApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   articleId = toSignal<number | null>(
     this.activatedRoute.paramMap.pipe(
@@ -36,14 +37,9 @@ export class ArticleViewPage {
   }
 
   loadArticle() {
-    this.articlesApiService.get(this.articleId() as number).subscribe({
-      next: (articleReponse) => this.article.set(articleReponse),
-      error: (ererrorResponse: HttpErrorResponse) => {
-        if (ererrorResponse.status == 404) {
-          //TODO: Implement on backend
-          this.router.navigate(['/error/not-found']);
-        }
-      },
-    });
+    this.articlesApiService
+      .get(this.articleId() as number)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((articleReponse) => this.article.set(articleReponse));
   }
 }

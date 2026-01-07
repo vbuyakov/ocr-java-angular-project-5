@@ -1,6 +1,7 @@
-import {Component, inject, OnInit, signal} from '@angular/core';
-import {TopicsApiService} from '@features/topics/topics-api.service';
-import {TopicResponseDto} from '@features/topics/dtos/topic-response.dto';
+import {Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
+import {TopicsApiService} from '@app/shared/services/topics-api.service';
+import {TopicResponseDto} from '@app/shared/dtos/topic-response.dto';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-topics-page',
@@ -11,6 +12,7 @@ import {TopicResponseDto} from '@features/topics/dtos/topic-response.dto';
 export class TopicsPage implements OnInit{
 
   private topicsApiService = inject(TopicsApiService);
+  private destroyRef = inject(DestroyRef);
 
   topicsList = signal<TopicResponseDto[]>([]);
 
@@ -19,13 +21,17 @@ export class TopicsPage implements OnInit{
   }
 
   loadTopic() {
-    this.topicsApiService.getAll().subscribe((topics: TopicResponseDto[])=> {
+    this.topicsApiService.getAll().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe((topics: TopicResponseDto[])=> {
       this.topicsList.set(topics);
     });
   }
 
   subscribeToTopic(topicId:number) {
-    this.topicsApiService.subscribeToTopic(topicId).subscribe(
+    this.topicsApiService.subscribeToTopic(topicId).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(
       () => this.loadTopic()
     );
   }

@@ -4,6 +4,7 @@ import { AppLayout } from '@core/layouts/app-layout/app-layout';
 import { AuthLayout } from '@core/layouts/auth-layout/auth-layout';
 import { BlankLayout } from '@core/layouts/blank-layout/blank-layout';
 import { authGuard } from '@core/auth/auth-guard';
+import { userPublicGuard } from './core/auth/user-public-guard';
 
 export const routes: Routes = [
   {
@@ -12,6 +13,7 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        canActivate: [userPublicGuard],
         loadComponent: () =>
           import('@features/welcome/welcome-page/welcome-page').then((m) => m.WelcomePage),
       },
@@ -30,6 +32,7 @@ export const routes: Routes = [
   {
     path: 'auth',
     component: AuthLayout,
+    canActivate: [userPublicGuard],
     children: [
       {
         path: 'register',

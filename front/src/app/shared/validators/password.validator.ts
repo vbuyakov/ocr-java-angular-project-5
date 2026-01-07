@@ -29,7 +29,7 @@ export function passwordValidator(): ValidatorFn {
       errors['hasUppercase'] = true;
     }
 
-    // Check for at least one special character
+    // eslint-disable-next-line no-useless-escape
     if (!/[!@#$%^&*()_+\-=\]\[{};':"\\|,.<>/?]/.test(value)) {
       errors['hasSpecialChar'] = true;
     }
