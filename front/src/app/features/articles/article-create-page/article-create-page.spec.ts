@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Type } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
@@ -7,7 +8,6 @@ import { Router } from '@angular/router';
 import { vi } from 'vitest';
 import { ArticleCreatePage } from './article-create-page';
 import { ArticlesApiService } from '@features/articles/articles-api.service';
-import { TopicsApiService } from '@shared/services/topics-api.service';
 import { ToastService } from '@shared/services/toast.service';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
 import { TopicResponseDto } from '@shared/dtos/topic-response.dto';
@@ -32,7 +32,7 @@ describe('ArticleCreatePage', () => {
       imports: [ArticleCreatePage, ReactiveFormsModule, FormsModule, FormInputComponent, NgClass],
       providers: [
         provideRouter([
-          { path: 'articles', component: {} as unknown },
+          { path: 'articles', component: class {} as Type<unknown> },
         ]),
         provideHttpClient(),
         provideHttpClientTesting(),
@@ -43,7 +43,6 @@ describe('ArticleCreatePage', () => {
     component = fixture.componentInstance;
     httpMock = TestBed.inject(HttpTestingController);
     articlesApiService = TestBed.inject(ArticlesApiService);
-    topicsApiService = TestBed.inject(TopicsApiService);
     router = TestBed.inject(Router);
     toastService = TestBed.inject(ToastService);
 

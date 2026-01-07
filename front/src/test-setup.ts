@@ -24,13 +24,21 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Mock setTimeout/clearTimeout for timer-based tests
-global.setTimeout = vi.fn((fn: () => void, delay?: number) => {
-  return setTimeout(fn, delay);
-}) as unknown as typeof setTimeout;
+// Use globalThis instead of global for better compatibility
+declare const globalThis: {
+  setTimeout: typeof setTimeout;
+  clearTimeout: typeof clearTimeout;
+};
 
-global.clearTimeout = vi.fn((id: number | undefined) => {
-  return clearTimeout(id);
-}) as unknown as typeof clearTimeout;
+if (typeof globalThis !== 'undefined') {
+  globalThis.setTimeout = vi.fn((fn: () => void, delay?: number) => {
+    return setTimeout(fn, delay);
+  }) as unknown as typeof setTimeout;
+
+  globalThis.clearTimeout = vi.fn((id: number | undefined) => {
+    return clearTimeout(id);
+  }) as unknown as typeof clearTimeout;
+}
 
 // Reset localStorage before each test
 beforeEach(() => {

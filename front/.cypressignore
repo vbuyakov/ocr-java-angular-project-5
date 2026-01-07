@@ -1,0 +1,10 @@
+# Cypress ignore file
+# Files and directories to ignore when running Cypress
+
+node_modules/
+dist/
+coverage/
+.angular/
+*.log
+.DS_Store
+

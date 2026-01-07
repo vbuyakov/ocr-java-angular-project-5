@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Type } from '@angular/core';
 import { HttpInterceptorFn, HttpErrorResponse, provideHttpClient, withInterceptors, HttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
@@ -22,8 +23,8 @@ describe('responseInterceptor', () => {
         provideHttpClient(withInterceptors([responseInterceptor])),
         provideHttpClientTesting(),
         provideRouter([
-          { path: 'error/not-found', component: {} as unknown },
-          { path: 'auth/login', component: {} as unknown },
+          { path: 'error/not-found', component: class {} as Type<unknown> },
+          { path: 'auth/login', component: class {} as Type<unknown> },
         ]),
         AuthService,
       ],

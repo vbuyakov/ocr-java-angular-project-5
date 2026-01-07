@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Type } from '@angular/core';
 import { provideRouter, Router, NavigationEnd } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -21,10 +22,10 @@ describe('AppLayout', () => {
       imports: [AppLayout],
       providers: [
         provideRouter([
-          { path: 'articles', component: {} as unknown },
-          { path: 'profile', component: {} as unknown },
-          { path: 'topics', component: {} as unknown },
-          { path: '', component: {} as unknown },
+          { path: 'articles', component: class {} as Type<unknown> },
+          { path: 'profile', component: class {} as Type<unknown> },
+          { path: 'topics', component: class {} as Type<unknown> },
+          { path: '', component: class {} as Type<unknown> },
         ]),
         provideHttpClient(),
         provideHttpClientTesting(),

@@ -90,6 +90,24 @@
               "src/**/*.html"
             ]
           }
+        },
+        "e2e": {
+          "builder": "@cypress/schematic:cypress",
+          "options": {
+            "devServerTarget": "mdd-webui:serve",
+            "watch": true,
+            "headless": false
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "mdd-webui:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "mdd-webui:serve",
+              "watch": false,
+              "headless": true
+            }
+          }
         }
       }
     }

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Type } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting, HttpTestingController } from '@angular/common/http/testing';
@@ -25,8 +26,8 @@ describe('LoginPage', () => {
       imports: [LoginPage, ReactiveFormsModule, FormInputComponent],
       providers: [
         provideRouter([
-          { path: 'articles', component: {} as unknown },
-          { path: 'auth/login', component: {} as unknown },
+          { path: 'articles', component: class {} as Type<unknown> },
+          { path: 'auth/login', component: class {} as Type<unknown> },
         ]),
         provideHttpClient(),
         provideHttpClientTesting(),

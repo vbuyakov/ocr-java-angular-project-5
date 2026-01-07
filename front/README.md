@@ -52,7 +52,63 @@ For end-to-end (e2e) testing, run:
 ng e2e
 ```
 
+For CI/CD pipelines, run:
+
+```bash
+npm run e2e:ci
+```
+
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+
+## Code Coverage
+
+This project uses [Vitest](https://vitest.dev/) with `@vitest/coverage-v8` for code coverage reporting.
+
+### Running tests with coverage
+
+To run unit tests with coverage:
+
+```bash
+ng test -- --coverage
+```
+
+Or use the npm script:
+
+```bash
+npm test -- --watch=false --coverage
+```
+
+### Generating coverage report
+
+The project includes a script to generate a comprehensive coverage report in Markdown format (French).
+
+**Generate report only** (requires existing coverage data):
+
+```bash
+npm run coverage:report
+```
+
+**Run tests and generate report**:
+
+```bash
+npm run coverage:full
+```
+
+This will:
+1. Execute all unit tests with coverage (`npm test -- --watch=false`)
+2. Generate `RAPPORT_COUVERTURE.md` with:
+   - Unit test coverage statistics (Lines, Statements, Functions, Branches)
+   - Coverage per file
+   - E2E test statistics
+   - Overall summary
+
+The report is saved to `RAPPORT_COUVERTURE.md` at the project root.
+
+### Coverage files
+
+- Coverage data: `coverage/mdd-webui/coverage-final.json`
+- Report script: `scripts/generate-coverage-report.js`
+- Generated report: `RAPPORT_COUVERTURE.md`
 
 ## Additional Resources
 

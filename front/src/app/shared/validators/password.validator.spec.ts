@@ -367,6 +367,55 @@ describe('passwordValidator', () => {
       // Spaces are not special characters in the regex
       expect(result?.['password']?.['hasSpecialChar']).toBeUndefined();
     });
+
+    // Cas limite : Tester toutes les combinaisons d'erreurs
+    it('should return all errors when password fails all checks', () => {
+      const control = new FormControl('a'); // Too short, no digit, no uppercase, no special
+      const result = validator(control);
+      expect(result?.['password']?.['minLength']).toBeDefined();
+      expect(result?.['password']?.['hasDigit']).toBe(true);
+      expect(result?.['password']?.['hasUppercase']).toBe(true);
+      expect(result?.['password']?.['hasSpecialChar']).toBe(true);
+    });
+
+    it('should handle password exactly at minimum length', () => {
+      const control = new FormControl('Passw0rd!'); // Exactly 8 characters
+      const result = validator(control);
+      expect(result).toBeNull();
+    });
+
+    it('should handle password one character below minimum', () => {
+      const control = new FormControl('Passw0!'); // 7 characters
+      const result = validator(control);
+      expect(result?.['password']?.['minLength']).toBeDefined();
+    });
+
+    it('should handle password with only digits', () => {
+      const control = new FormControl('12345678');
+      const result = validator(control);
+      expect(result?.['password']?.['hasLowercase']).toBe(true);
+      expect(result?.['password']?.['hasUppercase']).toBe(true);
+      expect(result?.['password']?.['hasSpecialChar']).toBe(true);
+    });
+
+    it('should handle password with only letters', () => {
+      const control = new FormControl('Password');
+      const result = validator(control);
+      expect(result?.['password']?.['hasDigit']).toBe(true);
+      expect(result?.['password']?.['hasSpecialChar']).toBe(true);
+    });
+
+    it('should handle password with only lowercase', () => {
+      const control = new FormControl('password1!');
+      const result = validator(control);
+      expect(result?.['password']?.['hasUppercase']).toBe(true);
+    });
+
+    it('should handle password with only uppercase', () => {
+      const control = new FormControl('PASSWORD1!');
+      const result = validator(control);
+      expect(result?.['password']?.['hasLowercase']).toBe(true);
+    });
   });
 });
 
@@ -390,6 +439,30 @@ describe('getPasswordErrorMessage', () => {
       };
       const message = getPasswordErrorMessage(errors);
       expect(message).toBe('Le mot de passe doit contenir au moins 8 caractères');
+    });
+
+    // Cas limite : Tester l'ordre de priorité des erreurs
+    it('should prioritize minLength error when multiple errors exist', () => {
+      const errors = {
+        password: {
+          minLength: { requiredLength: 8, actualLength: 5 },
+          hasDigit: true,
+          hasLowercase: true,
+        },
+      };
+      const message = getPasswordErrorMessage(errors);
+      expect(message).toBe('Le mot de passe doit contenir au moins 8 caractères');
+    });
+
+    it('should return hasDigit error message when minLength is not present', () => {
+      const errors = {
+        password: {
+          hasDigit: true,
+          hasLowercase: true,
+        },
+      };
+      const message = getPasswordErrorMessage(errors);
+      expect(message).toBe('Le mot de passe doit contenir au moins un chiffre');
     });
 
     it('should return hasDigit error message', () => {

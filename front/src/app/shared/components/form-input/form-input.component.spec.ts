@@ -6,7 +6,7 @@ import { vi } from 'vitest';
 
 @Component({
   template: `
-    <app-form-input
+      <app-form-input
       [formControl]="control"
       [label]="label"
       [type]="type"
@@ -14,6 +14,7 @@ import { vi } from 'vitest';
       [required]="required"
       [rows]="rows"
       [disabled]="disabled"
+      [formControlDisabled]="formControlDisabled"
       [errorMessage]="errorMessage"
     ></app-form-input>
   `,
@@ -28,6 +29,7 @@ class TestHostComponent {
   required = false;
   rows = 1;
   disabled = false;
+  formControlDisabled = false;
   errorMessage: string | undefined = undefined;
 }
 
@@ -436,6 +438,116 @@ describe('FormInputComponent', () => {
       // When control is disabled, setDisabledState should be called
       formInputComponent.setDisabledState(true);
       expect(formInputComponent?.isDisabled).toBe(true);
+    });
+
+    // Cas limites : Tester toutes les combinaisons de isDisabled()
+    it('should be disabled when only disabled() input is true', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = true;
+      testComponent.formControlDisabled = false;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      formInputComponent.setDisabledState(false);
+      testFixture.detectChanges();
+      expect(formInputComponent.isDisabled).toBe(true);
+    });
+
+    it('should be disabled when only _disabled is true', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = false;
+      testComponent.formControlDisabled = false;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      // Set disabled state and verify without triggering change detection
+      formInputComponent.setDisabledState(true);
+      // Just verify the getter without triggering change detection
+      expect(formInputComponent.isDisabled).toBe(true);
+    });
+
+    it('should be disabled when only formControlDisabled() is true', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = false;
+      testComponent.formControlDisabled = true;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      expect(formInputComponent.isDisabled).toBe(true);
+    });
+
+    it('should be disabled when all three are true', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = true;
+      testComponent.formControlDisabled = true;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      formInputComponent.setDisabledState(true);
+      testFixture.detectChanges();
+      expect(formInputComponent.isDisabled).toBe(true);
+    });
+
+    it('should be disabled when disabled() and _disabled are true', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = true;
+      testComponent.formControlDisabled = false;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      formInputComponent.setDisabledState(true);
+      testFixture.detectChanges();
+      expect(formInputComponent.isDisabled).toBe(true);
+    });
+
+    it('should be disabled when disabled() and formControlDisabled() are true', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = true;
+      testComponent.formControlDisabled = true;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      expect(formInputComponent.isDisabled).toBe(true);
+    });
+
+    it('should be disabled when _disabled and formControlDisabled() are true', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = false;
+      testComponent.formControlDisabled = true;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      formInputComponent.setDisabledState(true);
+      testFixture.detectChanges();
+      expect(formInputComponent.isDisabled).toBe(true);
+    });
+
+    it('should not be disabled when all three are false', () => {
+      const testFixture = TestBed.createComponent(TestHostComponent);
+      const testComponent = testFixture.componentInstance;
+      testComponent.disabled = false;
+      testComponent.formControlDisabled = false;
+      testFixture.detectChanges();
+      const formInputComponent = testFixture.debugElement.query(
+        (el) => el.name === 'app-form-input',
+      )?.componentInstance as FormInputComponent;
+      formInputComponent.setDisabledState(false);
+      testFixture.detectChanges();
+      expect(formInputComponent.isDisabled).toBe(false);
     });
   });
 

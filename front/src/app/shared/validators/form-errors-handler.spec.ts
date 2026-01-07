@@ -150,6 +150,50 @@ describe('handleServerError', () => {
 
       expect(result.generalErrors).toEqual([]);
     });
+
+    // Cas limite : 409 sans error.error.errors
+    it('should handle 409 without errors property', () => {
+      const error = new HttpErrorResponse({
+        status: 409,
+        statusText: 'Conflict',
+        error: {
+          message: 'Conflict occurred',
+        },
+      });
+
+      const result = handleServerError(error);
+
+      // Devrait tomber dans le else et traiter comme une autre erreur
+      expect(result.generalErrors).toEqual(['Conflict occurred']);
+      expect(result.fieldErrors).toBeUndefined();
+    });
+
+    // Cas limite : 409 avec error.error null
+    it('should handle 409 with null error object', () => {
+      const error = new HttpErrorResponse({
+        status: 409,
+        statusText: 'Conflict',
+        error: null,
+      });
+
+      const result = handleServerError(error);
+
+      // Devrait tomber dans le else
+      expect(result.generalErrors).toEqual(['Une erreur est survenue']);
+    });
+
+    // Cas limite : 409 avec error.error undefined
+    it('should handle 409 with undefined error object', () => {
+      const error = new HttpErrorResponse({
+        status: 409,
+        statusText: 'Conflict',
+      });
+
+      const result = handleServerError(error);
+
+      // Devrait tomber dans le else
+      expect(result.generalErrors).toEqual(['Une erreur est survenue']);
+    });
   });
 
   describe('Other Error Statuses', () => {
@@ -165,6 +209,35 @@ describe('handleServerError', () => {
       const result = handleServerError(error);
 
       expect(result.generalErrors).toEqual(['Server error occurred']);
+      expect(result.fieldErrors).toBeUndefined();
+    });
+
+    // Cas limite : 400 sans error.error
+    it('should handle 400 without error.error object', () => {
+      const error = new HttpErrorResponse({
+        status: 400,
+        statusText: 'Bad Request',
+        error: null,
+      });
+
+      const result = handleServerError(error);
+
+      // Devrait tomber dans le else
+      expect(result.generalErrors).toEqual(['Une erreur est survenue']);
+      expect(result.fieldErrors).toBeUndefined();
+    });
+
+    // Cas limite : 400 avec error.error undefined
+    it('should handle 400 with undefined error.error', () => {
+      const error = new HttpErrorResponse({
+        status: 400,
+        statusText: 'Bad Request',
+      });
+
+      const result = handleServerError(error);
+
+      // Devrait tomber dans le else
+      expect(result.generalErrors).toEqual(['Une erreur est survenue']);
       expect(result.fieldErrors).toBeUndefined();
     });
 

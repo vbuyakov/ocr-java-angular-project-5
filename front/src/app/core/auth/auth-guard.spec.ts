@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { Type } from '@angular/core';
 import { CanActivateFn, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { provideRouter } from '@angular/router';
 import { authGuard } from './auth-guard';
@@ -16,8 +17,8 @@ describe('authGuard', () => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter([
-          { path: 'auth/login', component: {} as unknown },
-          { path: 'articles', component: {} as unknown },
+          { path: 'auth/login', component: class {} as Type<unknown> },
+          { path: 'articles', component: class {} as Type<unknown> },
         ]),
         AuthService,
       ],
