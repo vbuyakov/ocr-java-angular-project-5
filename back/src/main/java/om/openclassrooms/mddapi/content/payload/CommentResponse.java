@@ -1,7 +1,6 @@
 package om.openclassrooms.mddapi.content.payload;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import om.openclassrooms.mddapi.content.model.Comment;
 
 import java.time.LocalDateTime;

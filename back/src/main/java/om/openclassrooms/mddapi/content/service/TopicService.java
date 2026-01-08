@@ -3,7 +3,6 @@ package om.openclassrooms.mddapi.content.service;
 
 import om.openclassrooms.mddapi.common.exception.ResourceNotFoundException;
 import om.openclassrooms.mddapi.content.model.Topic;
-import om.openclassrooms.mddapi.content.payload.TopicRequest;
 import om.openclassrooms.mddapi.content.payload.TopicResponse;
 import om.openclassrooms.mddapi.content.repository.TopicRepository;
 import om.openclassrooms.mddapi.user.model.User;

@@ -1,10 +1,6 @@
 package om.openclassrooms.mddapi.content.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
-import om.openclassrooms.mddapi.content.model.Article;
 import om.openclassrooms.mddapi.content.payload.ArticleResponse;
 import om.openclassrooms.mddapi.content.payload.CommentResponse;
 import om.openclassrooms.mddapi.content.payload.CreateArticleRequest;

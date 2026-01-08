@@ -1,6 +1,5 @@
 package om.openclassrooms.mddapi.auth.service;
 
-import om.openclassrooms.mddapi.auth.exception.UserNotFoundException;
 import om.openclassrooms.mddapi.auth.payload.LoginRequest;
 import om.openclassrooms.mddapi.auth.payload.RegistrationRequest;
 import om.openclassrooms.mddapi.common.exception.ConflictException;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AuthService {
