@@ -6,7 +6,7 @@ import om.openclassrooms.mddapi.content.model.Article;
 
 import java.time.LocalDateTime;
 
-public record ArticleResponse(
+public record   ArticleResponse(
         Long id,
         String title,
         String content,

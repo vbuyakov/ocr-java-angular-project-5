@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { provideRouter } from '@angular/router';
 import { BlankLayout } from './blank-layout';
 
 describe('BlankLayout', () => {
@@ -8,13 +8,13 @@ describe('BlankLayout', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BlankLayout]
-    })
-    .compileComponents();
+      imports: [BlankLayout],
+      providers: [provideRouter([])],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(BlankLayout);
     component = fixture.componentInstance;
-    await fixture.whenStable();
+    fixture.detectChanges();
   });
 
   it('should create', () => {

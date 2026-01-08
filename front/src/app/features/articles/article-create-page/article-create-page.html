@@ -1,1 +1,102 @@
-<p>article-create-page works!</p>
+<section class="min-h-screen bg-white">
+  <div class="container-page py-8">
+    <div class="flex items-center flex-col md:flex-row mb-4 ">
+      <div class="flex items-start w-full md:w-12 ">
+        <a routerLink="/articles">
+          <img
+            alt="Back"
+            class="w-10"
+            src="/images/common/arrow-left.svg"
+          />
+        </a>
+      </div>
+      <div class="flex md:pr-12  max-md:w-100 flex-1">
+        <h1 class="text-2xl text-center w-full font-bold">
+          Créer un nouvel article
+        </h1>
+      </div>
+    </div>
+
+    <form
+      (ngSubmit)="onSubmit()"
+      [formGroup]="articleForm"
+      class="max-w-sm mx-auto flex flex-col gap-7 mt-8"
+    >
+      @if (generalErrors().length > 0) {
+        <div class="bg-danger-50 border border-danger-200 text-danger-800 px-4 py-3 rounded-lg text-sm">
+          @for (error of generalErrors(); track error) {
+            <p>{{ error }}</p>
+          }
+        </div>
+      }
+
+      <div>
+        <select
+          [ngClass]="[!!getFieldError('topicId')
+      ? 'border-danger-600 hover:border-danger-900 shadow-danger-600/30'
+      : 'border-mdd-text hover:border-primary-400',
+        !articleForm.value.topicId ? 'text-secondary-400':''
+      ]"
+          class="
+      border border-solid rounded-lg py-2 px-4 min-h-12  text-base w-full bg-white transition
+      focus:outline-none focus:ring-0 focus:border-purple-600
+      hover:shadow-md focus:shadow-md
+      placeholder:text-secondary-400 placeholder:opacity-60
+      disabled:border-secondary-300 disabled:text-secondary-100 disabled:cursor-not-allowed
+      "
+
+          formControlName="topicId"
+
+        >
+          <option [ngValue]="null" disabled  >Sélectionner un thème</option>
+          @for (topic of topicsList(); track topic.id) {
+            <option [ngValue]="topic.id">{{ topic.name }}</option>
+          }
+        </select>
+        @if (!!getFieldError('topicId')) {
+          <span class="
+          text-danger-600
+          font-medium
+          text-xs
+          form-input-error-message" role="alert">
+            {{ getFieldError('topicId') }}
+          </span>
+        }
+      </div>
+
+      <app-form-input
+        [errorMessage]="getFieldError('title')"
+        [formControlDisabled]="isSubmitting()"
+        [required]="true"
+        formControlName="title"
+        placeholder="Titre de l’article"
+        type="text">
+      </app-form-input>
+
+      <app-form-input
+        [errorMessage]="getFieldError('content')"
+        [formControlDisabled]="isSubmitting()"
+        [rows]="5"
+        formControlName="content"
+        placeholder="Contenu de l’article"
+        type="textarea"
+      >
+      </app-form-input>
+
+      <button
+        [disabled]="isSubmitting() || articleForm.invalid"
+        class="btn-primary mx-auto mt-2"
+        type="submit"
+      >
+        @if (isSubmitting()) {
+          Création en cour...
+        } @else {
+          Créer
+        }
+      </button>
+
+    </form>
+
+
+  </div>
+</section>

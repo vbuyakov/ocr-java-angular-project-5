@@ -53,14 +53,6 @@ public class TopicService {
     }
 
     @Transactional
-    public void createTopic(TopicRequest topic){
-        Topic topicEntity = new Topic();
-        topicEntity.setName(topic.getName());
-        topicEntity.setDescription(topic.getDescription());
-        topicRepository.save(topicEntity);
-    }
-
-    @Transactional
     public void subscribe(User principalUser, Long topicId){
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("user.notFound"));

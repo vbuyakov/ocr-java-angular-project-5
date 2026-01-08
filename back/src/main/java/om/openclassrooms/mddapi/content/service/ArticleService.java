@@ -1,5 +1,6 @@
 package om.openclassrooms.mddapi.content.service;
 
+import om.openclassrooms.mddapi.common.exception.ResourceNotFoundException;
 import om.openclassrooms.mddapi.common.exception.WrongParametersException;
 import om.openclassrooms.mddapi.content.model.Article;
 import om.openclassrooms.mddapi.content.payload.ArticleResponse;
@@ -54,6 +55,7 @@ public class ArticleService {
 
     public ArticleResponse getArticleById(Long articleId) {
         return ArticleResponse.from(articleRepository.findById(articleId).orElseThrow(
-                () -> new WrongParametersException("article")));
+                () -> new ResourceNotFoundException("article")
+        ));
     }
 }

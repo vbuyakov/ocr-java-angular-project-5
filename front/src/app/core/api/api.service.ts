@@ -1,13 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-
-export interface ApiError {
-  errors?: string[];
-  message?: string;
-  [key: string]: string | string[] | undefined;
-}
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,13 +10,18 @@ export class ApiService {
   private readonly baseUrl = '/api';
 
   post<T>(endpoint: string, body: unknown): Observable<T> {
-    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body).pipe(
-      catchError((error: HttpErrorResponse) => this.handleError(error))
-    );
+    return this.http.post<T>(`${this.baseUrl}${endpoint}`, body);
   }
 
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    return throwError(() => error);
+  get<T>(endpoint: string): Observable<T> {
+    return this.http.get<T>(`${this.baseUrl}${endpoint}`);
+  }
+
+  put<T>(endpoint: string, body: unknown): Observable<T> {
+    return this.http.put<T>(`${this.baseUrl}${endpoint}`, body);
+  }
+
+  delete<T>(endpoint: string): Observable<T> {
+    return this.http.delete<T>(`${this.baseUrl}${endpoint}`);
   }
 }
-

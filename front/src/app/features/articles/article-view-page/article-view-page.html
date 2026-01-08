@@ -1,1 +1,40 @@
-<p>article-view-page works!</p>
+<section class="min-h-screen bg-white">
+  <div class="container-page py-8">
+    @if (article(); as article) {
+    <div class="flex items-start md:items-center mb-4 ">
+      <div class="w-11 md:w-12">
+        <a routerLink="/articles">
+          <img
+            alt="Retour"
+            class="max-w-none w-10"
+            src="/images/common/arrow-left.svg"
+          />
+        </a>
+      </div>
+      <div class="px-8 pr-md:pr-12 ">
+        <h2 class="text-2xl text-center font-bold">{{ article.title }}</h2>
+      </div>
+    </div>
+
+
+    <div class="md:px-12">
+      <div class="py-8 flex  flex-wrap gap-x-12 gap-y-6">
+        <div class="text-xl">{{article.createdAt}}</div>
+        <div class="text-xl">{{article.author}}</div>
+        <div class="text-xl">{{article.topic}}</div>
+      </div>
+      <div class="text-xl">
+        {{ article.content }}
+      </div>
+
+      <hr class="mt-8 mb-5 md:my-9">
+
+      <h3 class="text-xl mb-5 md:mb-9">Commentaires</h3>
+
+      <app-article-comments [articleId]="article.id"/>
+    </div>
+    }
+
+
+  </div>
+</section>

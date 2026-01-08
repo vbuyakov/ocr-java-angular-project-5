@@ -1,13 +1,13 @@
 <section class="bg-white min-h-screen">
-  <div class="container-auth pt-10 md:pt-10">
+  <div class="container-auth pt-10">
 
     <!-- Back arrow (mobile + desktop) -->
     <div class="mb-6">
       <a routerLink="/" class="inline-block">
         <img
-          src="/images/common/left-arrow.svg"
+          src="/images/common/arrow-left.svg"
           alt="Back"
-          class="w-[39px]"
+          class="w-10"
         />
       </a>
     </div>
@@ -22,29 +22,54 @@
     </div>
 
     <!-- Title -->
-    <h1 class="text-[24px] text-center mb-8">
+    <h1 class="text-2xl text-center mb-8">
       Se connecter
     </h1>
 
     <!-- Form -->
-    <form class="max-w-sm mx-auto flex flex-col gap-7 mt-8">
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      class="max-w-sm mx-auto flex flex-col gap-7 mt-8"
+    >
+      @if (getGeneralErrors().length > 0) {
+        <div class="bg-danger-50 border border-danger-200 text-danger-800 px-4 py-3 rounded-lg text-sm">
+          @for (error of getGeneralErrors(); track error) {
+            <p>{{ error }}</p>
+          }
+        </div>
+      }
 
-      <app-form-input 
+      <app-form-input
+        formControlName="login"
         label="E-mail ou nom d'utilisateur"
         type="text"
         placeholder="Entrez votre e-mail ou nom d'utilisateur"
+        [errorMessage]="getFieldError('login')"
+        [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
 
-      <app-form-input 
+      <app-form-input
+        formControlName="password"
         label="Mot de passe"
         type="password"
         placeholder="Entrez votre mot de passe"
+        [errorMessage]="getFieldError('password')"
+        [formControlDisabled]="isSubmitting()"
         [required]="true">
       </app-form-input>
 
-      <button type="submit" class="btn-primary mx-auto mt-2">
-        Se connecter
+      <button
+        type="submit"
+        class="btn-primary mx-auto mt-2"
+        [disabled]="isSubmitting() || loginForm.invalid"
+      >
+        @if (isSubmitting()) {
+          Connexion en cours...
+        } @else {
+          Se connecter
+        }
       </button>
 
     </form>

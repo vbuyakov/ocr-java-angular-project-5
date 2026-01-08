@@ -1,11 +1,18 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { FormInputComponent } from '@shared/components/form-input/form-input.component';
 import { AuthApiService } from '@features/auth/auth-api.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import { timer } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { ToastService } from '@shared/services/toast.service';
+import { passwordValidator } from '@shared/validators/password.validator';
+import {
+  ServerError,
+  handleServerError,
+  getFieldError,
+} from '@shared/validators/form-errors-handler';
+import { finalize } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-register-page',
@@ -17,18 +24,19 @@ export class RegisterPage {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authApiService = inject(AuthApiService);
   private readonly router = inject(Router);
+  private readonly toastService = inject(ToastService);
+  private readonly destroyRef = inject(DestroyRef);
 
   registerForm: FormGroup;
   isSubmitting = signal(false);
-  successMessage = signal<string | null>(null);
   fieldErrors = signal<Record<string, string>>({});
   generalErrors = signal<string[]>([]);
 
   constructor() {
     this.registerForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required]],
+      username: ['', [Validators.required,Validators.maxLength(255)]],
+      email: ['', [Validators.required, Validators.email,Validators.maxLength(255)]],
+      password: ['', [Validators.required, passwordValidator(), Validators.maxLength(255)]],
     });
   }
 
@@ -40,63 +48,42 @@ export class RegisterPage {
     this.isSubmitting.set(true);
     this.fieldErrors.set({});
     this.generalErrors.set([]);
-    this.successMessage.set(null);
 
     const formValue = this.registerForm.value;
 
-    this.authApiService.register({
-      username: formValue.username.trim(),
-      email: formValue.email.trim(),
-      password: formValue.password,
-    }).pipe(
-      tap(() => {
-        this.isSubmitting.set(false);
-        this.successMessage.set('Inscription réussie ! Redirection...');
-      }),
-      switchMap(() => timer(1000)),
-      tap(() => {
-        this.router.navigate(['/auth/login']);
+    this.authApiService
+      .register({
+        username: formValue.username.trim(),
+        email: formValue.email.trim(),
+        password: formValue.password,
       })
-    ).subscribe({
-      error: (error: HttpErrorResponse) => {
-        this.isSubmitting.set(false);
-        this.handleError(error);
-      }
-    });
-  }
-
-  private handleError(error: HttpErrorResponse): void {
-    if (error.status === 409 && error.error?.errors) {
-      // Conflict errors (duplicates) - returns { "errors": ["message1", "message2"] }
-      const errors = error.error.errors as string[];
-      this.generalErrors.set(errors);
-      this.fieldErrors.set({});
-    } else if (error.status === 400 && error.error) {
-      // Validation errors - returns { "fieldName": "error message", ... }
-      const fieldErrors: Record<string, string> = {};
-      Object.keys(error.error).forEach(field => {
-        if (field !== 'errors' && field !== 'message') {
-          fieldErrors[field] = error.error[field];
-        }
+      .pipe(
+        finalize(() => {
+          this.isSubmitting.set(false);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: () => {
+          this.toastService.show('Inscription réussie !', 'success', 3000);
+          this.router.navigate(['/auth/login']);
+        },
+        error: (errorResponse: HttpErrorResponse) => {
+          const serverError: ServerError = handleServerError(errorResponse);
+          this.generalErrors.set(serverError.generalErrors || []);
+          this.fieldErrors.set(serverError.fieldErrors || {});
+        },
       });
-      this.fieldErrors.set(fieldErrors);
-      
-      // Also check for general errors in the response
-      if (error.error.message) {
-        this.generalErrors.set([error.error.message]);
-      }
-    } else {
-      // Other errors
-      this.generalErrors.set([error.error?.message || 'Une erreur est survenue']);
-    }
   }
 
   getFieldError(fieldName: string): string | undefined {
-    return this.fieldErrors()[fieldName];
+    if (this.fieldErrors()[fieldName]) {
+      return this.fieldErrors()[fieldName];
+    }
+    return getFieldError(this.registerForm, fieldName);
   }
 
   getGeneralErrors(): string[] {
     return this.generalErrors();
   }
 }
-
