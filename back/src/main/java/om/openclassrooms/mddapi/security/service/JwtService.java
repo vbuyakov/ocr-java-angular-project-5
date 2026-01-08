@@ -5,14 +5,12 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
 
-@Slf4j
 @Service
 public class JwtService {
     @Value("${spring.security.jwt.expiration-time}")
@@ -31,12 +29,20 @@ public class JwtService {
     }
 
     public Long extractUserId(String token){
-        return Long.parseLong(Jwts.parser().setSigningKey(getJwtSecretKey()).parseClaimsJws(token).getBody().getSubject());
+        return Long.parseLong(Jwts.parserBuilder()
+                .setSigningKey(getJwtSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject());
     }
 
     public boolean isTokenValid(String authToken){
         try{
-            Jwts.parser().setSigningKey(getJwtSecretKey()).parseClaimsJws(authToken);
+            Jwts.parserBuilder()
+                    .setSigningKey(getJwtSecretKey())
+                    .build()
+                    .parseClaimsJws(authToken);
             return true;
         } catch(JwtException | IllegalArgumentException e) {
             return false;

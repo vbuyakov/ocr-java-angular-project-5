@@ -6,7 +6,6 @@ import om.openclassrooms.mddapi.content.model.Article;
 import om.openclassrooms.mddapi.content.payload.ArticleResponse;
 import om.openclassrooms.mddapi.content.payload.CreateArticleRequest;
 import om.openclassrooms.mddapi.content.repository.ArticleRepository;
-import om.openclassrooms.mddapi.content.repository.CommentRepository;
 import om.openclassrooms.mddapi.content.repository.TopicRepository;
 import om.openclassrooms.mddapi.user.repository.UserRepository;
 import org.springframework.data.domain.Sort;
@@ -21,16 +20,13 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final UserRepository userRepository;
     private final TopicRepository topicRepository;
-    private final CommentRepository commentRepository;
 
     public ArticleService(ArticleRepository articleRepository,
                           UserRepository userRepository,
-                          TopicRepository topicRepository,
-                          CommentRepository commentRepository) {
+                          TopicRepository topicRepository) {
         this.articleRepository = articleRepository;
         this.userRepository = userRepository;
         this.topicRepository = topicRepository;
-        this.commentRepository = commentRepository;
     }
 
     public void createArticle(CreateArticleRequest createArticleRequest, Long userId)

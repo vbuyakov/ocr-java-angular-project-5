@@ -45,11 +45,8 @@ public class UserService {
         user.setEmail(email);
         user.setUsername(username);
 
-
         if(profileUpdateRequest.password() != null && !profileUpdateRequest.password().isEmpty()) {
-            String cryptedPassword = profileUpdateRequest.password().trim();
             user.setPassword(passwordEncoder.encode(profileUpdateRequest.password().trim()));
-
         }
         userRepository.save(user);
         return getUserProfile(userId);

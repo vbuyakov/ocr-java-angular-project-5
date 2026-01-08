@@ -1,7 +1,6 @@
 package om.openclassrooms.mddapi.content.controller;
 
 import om.openclassrooms.mddapi.content.payload.TopicName;
-import om.openclassrooms.mddapi.content.payload.TopicRequest;
 import om.openclassrooms.mddapi.content.payload.TopicResponse;
 import om.openclassrooms.mddapi.content.service.TopicService;
 import om.openclassrooms.mddapi.user.model.User;

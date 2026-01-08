@@ -1,7 +1,6 @@
 package om.openclassrooms.mddapi.auth.exception;
 
 import om.openclassrooms.mddapi.common.exception.ResourceNotFoundException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class UserNotFoundException extends ResourceNotFoundException {
     private final String login;
