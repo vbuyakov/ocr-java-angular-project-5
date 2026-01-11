@@ -1,3 +1,9 @@
 .DS_Store
 .vscode
 .env
+
+# Python virtual environments
+docker/tools/.venv
+
+# Generated data files
+docker/tools/generated_data/
