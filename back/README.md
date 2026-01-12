@@ -40,9 +40,28 @@ COMPOSE_DOCKER_CLI_BUILD=1
 
 ## Running the Application
 
+### Prerequisites
+
+Before starting the application, ensure:
+1. MySQL is running (either locally or via Docker)
+2. The database `mddapp` exists (or Hibernate will create it with `ddl-auto: update`)
+3. Environment variables are configured (see Configuration section)
+
 ### Option 1: Using Maven (Recommended for Development)
 
-1. **Set environment variables** (export them or use a `.env` file loader):
+1. **Set environment variables**:
+
+   **Option A: IntelliJ IDEA (Recommended)**
+   
+   In IntelliJ IDEA, configure environment variables in the run configuration:
+   - Open `Run` > `Edit Configurations...`
+   - Select the Spring Boot configuration
+   - In `Environment variables`, add all variables from the `.env` file
+   - Or use the `EnvFile` plugin to automatically load the `.env` file
+   
+   **Option B: Command Line**
+   
+   Export environment variables:
    ```bash
    export APP_NAME=MDDApp
    export SERVER_PORT=8080
@@ -53,6 +72,11 @@ COMPOSE_DOCKER_CLI_BUILD=1
    export MYSQL_DB_URL=jdbc:mysql://127.0.0.1:3306/mddapp
    export JWT_SECRET_KEY=3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
    export JWT_EXPIRATION_TIME=7200000
+   ```
+   
+   Or load from `.env` file:
+   ```bash
+   export $(cat ../.env | xargs)
    ```
 
 2. **Start the application**:
@@ -72,7 +96,7 @@ COMPOSE_DOCKER_CLI_BUILD=1
 
 3. **The application will be available at**:
    - Base URL: `http://localhost:8080/api`
-   - Swagger UI: `http://localhost:8080/api/swagger-ui.html`
+   - Swagger UI: `http://localhost:8080/api/swagger-ui/index.html`
 
 ### Option 2: Build and Run JAR
 
@@ -194,7 +218,7 @@ mvn clean test jacoco:report
 mvn clean verify
 ```
 
-**View the report:**
+**View the HTML report:**
 ```bash
 # On macOS
 open target/site/jacoco/index.html
@@ -205,6 +229,27 @@ xdg-open target/site/jacoco/index.html
 # On Windows
 start target/site/jacoco/index.html
 ```
+
+### Generate Markdown Coverage Report
+
+After generating the JaCoCo HTML report, you can generate a Markdown report in French:
+
+```bash
+# Generate Markdown report (requires existing JaCoCo data)
+python3 scripts/generate_coverage_report.py
+
+# Or run tests and generate both reports in one command
+mvn clean verify jacoco:report && python3 scripts/generate_coverage_report.py
+```
+
+The Markdown report will be generated at: `RAPPORT_COUVERTURE.md`
+
+The report includes:
+- Global coverage statistics (instructions, lines, branches, methods, classes)
+- Coverage breakdown by package
+- Unit test statistics (125 tests)
+- Integration test statistics (49 tests)
+- Summary with color-coded badges
 
 **Current Coverage:** All tests passing with good coverage across services, controllers, handlers, validators, and utilities.
 
