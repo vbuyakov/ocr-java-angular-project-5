@@ -139,6 +139,10 @@ class ArticleControllerIT {
         testTopic.setName("Java");
         testTopic.setDescription("Java programming");
         topicRepository.save(testTopic);
+
+        // Subscribe user to topic so they can see articles from it
+        testUser.getSubscribedTopics().add(testTopic);
+        userRepository.save(testUser);
     }
 
     @Test

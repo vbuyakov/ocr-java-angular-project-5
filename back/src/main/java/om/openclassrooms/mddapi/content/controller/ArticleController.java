@@ -28,8 +28,8 @@ public class ArticleController {
     }
 
     @GetMapping
-    public List<ArticleResponse> getAllArticles(Sort sort){
-        return articleService.getAllArticles(sort);
+    public List<ArticleResponse> getAllArticles(Sort sort, @AuthenticationPrincipal User user){
+        return articleService.getAllArticlesForUser(user.getId(), sort);
     }
 
     @GetMapping("{articleId}")

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,8 +43,9 @@ public class ArticleService {
     }
 
     @Transactional(readOnly = true)
-    public List<ArticleResponse> getAllArticles(Sort sort) {
-        return articleRepository.findAll(sort)
+    public List<ArticleResponse> getAllArticlesForUser(Long userId, Sort sort) {
+
+        return articleRepository.findAllByUserSubscription(userId, sort)
                 .stream()
                 .map(ArticleResponse::from)
                 .collect(Collectors.toList());
@@ -54,4 +56,6 @@ public class ArticleService {
                 () -> new ResourceNotFoundException("article")
         ));
     }
+
+
 }
