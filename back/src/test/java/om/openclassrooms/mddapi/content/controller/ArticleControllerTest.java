@@ -24,6 +24,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -79,14 +80,15 @@ class ArticleControllerTest {
     @Test
     void getAllArticles_Success() throws Exception {
         List<ArticleResponse> articles = Arrays.asList(articleResponse);
-        when(articleService.getAllArticles(any(Sort.class))).thenReturn(articles);
+        when(articleService.getAllArticlesForUser(eq(1L), any(Sort.class))).thenReturn(articles);
 
-        mockMvc.perform(get("/articles"))
+        mockMvc.perform(get("/articles")
+                        .requestAttr("user", testUser))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
                 .andExpect(jsonPath("$[0].title").value("Test Article"));
 
-        verify(articleService).getAllArticles(any(Sort.class));
+        verify(articleService).getAllArticlesForUser(eq(1L), any(Sort.class));
     }
 
     @Test

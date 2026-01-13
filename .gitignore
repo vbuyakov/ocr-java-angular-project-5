@@ -7,3 +7,6 @@ docker/tools/.venv
 
 # Generated data files
 docker/tools/generated_data/
+
+# Rapports
+rapports/pdf/

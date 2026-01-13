@@ -21,7 +21,7 @@ export class ArticlesPage {
   readonly OrderBy = OrderBy;
   readonly OrderByKeys = Object.keys(OrderBy) as OrderByKey[];
   orderByValue = signal<string>(DEFAULT_ORDER_BY);
-  orderToValue = signal<string>('asc');
+  orderToValue = signal<string>('desc');
 
   isLoading = signal(false);
   articles$!: Observable<ArticleResponseDto[]>;

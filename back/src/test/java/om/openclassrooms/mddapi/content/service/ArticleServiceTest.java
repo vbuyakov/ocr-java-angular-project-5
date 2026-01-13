@@ -114,28 +114,28 @@ class ArticleServiceTest {
     }
 
     @Test
-    void getAllArticles_Success() {
+    void getAllArticles_ForUser_Success() {
         List<Article> articles = Arrays.asList(testArticle);
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        when(articleRepository.findAll(sort)).thenReturn(articles);
+        when(articleRepository.findAllByUserSubscription(1L, sort)).thenReturn(articles);
 
-        List<ArticleResponse> result = articleService.getAllArticles(sort);
+        List<ArticleResponse> result = articleService.getAllArticlesForUser(1L, sort);
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        verify(articleRepository).findAll(sort);
+        verify(articleRepository).findAllByUserSubscription(1L, sort);
     }
 
     @Test
-    void getAllArticles_EmptyList() {
+    void getAllArticles_ForUser_EmptyList() {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdAt");
-        when(articleRepository.findAll(sort)).thenReturn(List.of());
+        when(articleRepository.findAllByUserSubscription(1L, sort)).thenReturn(List.of());
 
-        List<ArticleResponse> result = articleService.getAllArticles(sort);
+        List<ArticleResponse> result = articleService.getAllArticlesForUser(1L, sort);
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
-        verify(articleRepository).findAll(sort);
+        verify(articleRepository).findAllByUserSubscription(1L, sort);
     }
 
     @Test
